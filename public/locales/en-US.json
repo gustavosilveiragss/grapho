@@ -1,0 +1,23 @@
+{
+    "app": {
+        "title": "ASCII Paint"
+    },
+    "toolbar": {
+        "placeholder": "Text to paint...",
+        "font": "Font...",
+        "size": "Size",
+        "color": "Color",
+        "bgColor": "Background",
+        "stroke": "Stroke",
+        "spacing": "Spacing",
+        "continue": "Continue",
+        "restart": "Restart",
+        "undo": "Undo",
+        "clear": "Clear",
+        "save": "Save"
+    },
+    "hints": {
+        "zoom": "Ctrl + Scroll: Zoom",
+        "pan": "Space + Drag: Move"
+    }
+}

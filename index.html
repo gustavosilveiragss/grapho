@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title data-i18n="app.title">ASCII Paint</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div id="canvas-container"></div>
+
+        <div id="lang-switcher">
+            <button class="flag-button active" data-locale="pt-BR"
+                    onclick="window.i18nModule?.switchLanguage('pt-BR')">🇧🇷</button>
+            <button class="flag-button" data-locale="en-US"
+                    onclick="window.i18nModule?.switchLanguage('en-US')">🇺🇸</button>
+        </div>
+
+        <div id="nav-hint">
+            <i data-lucide="mouse-pointer"></i>
+            <div class="hint-lines">
+                <span data-i18n="hints.zoom"></span>
+                <span data-i18n="hints.pan"></span>
+            </div>
+        </div>
+
+        <div id="toolbar">
+            <div class="toolbar-content">
+                <div class="tool-group text-group">
+                    <textarea id="paint-text" rows="3"
+                              data-i18n-placeholder="toolbar.placeholder"
+                              spellcheck="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </textarea>
+                </div>
+
+                <div class="toolbar-controls">
+                    <div class="toolbar-row">
+                        <div class="tool-group font-group">
+                            <i data-lucide="type"></i>
+                            <div class="font-selector">
+                                <input type="text" id="font-search"
+                                       data-i18n-placeholder="toolbar.font"
+                                       autocomplete="off" spellcheck="false">
+                                <div id="font-dropdown" class="font-dropdown"></div>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="tool-group">
+                            <i data-lucide="a-large-small"></i>
+                            <label for="font-size" data-i18n="toolbar.size"></label>
+                            <input type="number" id="font-size" min="8" max="120" value="32" step="1">
+                        </div>
+
+                        <div class="tool-group">
+                            <i data-lucide="space"></i>
+                            <label for="spacing" data-i18n="toolbar.spacing"></label>
+                            <input type="number" id="spacing" min="0.3" max="1.5" value="0.6" step="0.05">
+                        </div>
+
+                        <div class="tool-group">
+                            <i data-lucide="pen-line"></i>
+                            <label for="stroke-weight" data-i18n="toolbar.stroke"></label>
+                            <input type="number" id="stroke-weight" min="0" max="5" value="0" step="0.5">
+                        </div>
+                    </div>
+
+                    <div class="toolbar-row">
+                        <div class="tool-group">
+                            <i data-lucide="palette"></i>
+                            <label for="color-picker" data-i18n="toolbar.color"></label>
+                            <input type="color" id="color-picker" value="#000000">
+                        </div>
+
+                        <div class="tool-group">
+                            <i data-lucide="paint-bucket"></i>
+                            <label for="bg-color-picker" data-i18n="toolbar.bgColor"></label>
+                            <input type="color" id="bg-color-picker" value="#ffffff">
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="tool-group">
+                            <button class="dock-button toggle-btn active" id="continue-btn"
+                                    onclick="window.controlsModule?.toggleContinue()">
+                                <i data-lucide="repeat"></i>
+                                <span data-i18n="toolbar.continue"></span>
+                            </button>
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="tool-group actions">
+                            <button class="dock-button" id="undo-btn" onclick="window.historyModule?.undo()">
+                                <i data-lucide="undo-2"></i>
+                                <span data-i18n="toolbar.undo"></span>
+                            </button>
+                            <button class="dock-button danger" id="clear-btn" onclick="window.historyModule?.clear()">
+                                <i data-lucide="trash-2"></i>
+                                <span data-i18n="toolbar.clear"></span>
+                            </button>
+                            <button class="dock-button" id="save-btn" onclick="window.exportModule?.savePNG()">
+                                <i data-lucide="download"></i>
+                                <span data-i18n="toolbar.save"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+</body>
+</html>

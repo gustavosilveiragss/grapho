@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.vite/
+vite.config.js.timestamp-*
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+tmp/
+temp/
+.publish/
+.claude

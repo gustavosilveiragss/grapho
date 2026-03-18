@@ -1,0 +1,26 @@
+{
+  "name": "ascii-paint",
+  "version": "1.0.0",
+  "description": "Paint text along paths on a canvas",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "ascii",
+    "paint",
+    "text",
+    "canvas"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^2.0.3"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}
