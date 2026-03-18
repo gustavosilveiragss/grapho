@@ -3,12 +3,14 @@ import { mathUtils } from './mathUtils.js';
 import { drawingModule } from './drawing.js';
 import { historyModule } from './history.js';
 
-const PATH_HISTORY = 6;
+const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
 
 class PaintingModule {
     constructor() {
         this.throttleFrame = null;
+        this.eraserPos = null;
+        this.erasedThisStroke = false;
     }
 
     setup() {
@@ -18,8 +20,13 @@ class PaintingModule {
         canvas.addEventListener('pointerdown', (e) => this.onPointerDown(e));
         canvas.addEventListener('pointermove', (e) => this.onPointerMove(e));
         canvas.addEventListener('pointerup', (e) => this.onPointerEnd(e));
-        canvas.addEventListener('pointerleave', (e) => this.onPointerEnd(e));
+        canvas.addEventListener('pointerleave', (e) => this.onPointerLeave(e));
         canvas.style.touchAction = 'none';
+    }
+
+    onPointerLeave(e) {
+        this.eraserPos = null;
+        this.onPointerEnd(e);
     }
 
     onPointerDown(e) {
@@ -30,9 +37,13 @@ class PaintingModule {
         state.painting.isActive = true;
         state.painting.pathPoints = [{ x, y }];
         state.painting.lastPlacedPos = { x, y };
-        state.painting.smoothedAngle = 0;
+        state.painting.smoothedAngle = null;
 
-        if (!state.tool.continueFromLast) {
+        if (state.tool.mode === 'eraser') {
+            this.eraserPos = { x, y };
+            this.erasedThisStroke = false;
+            this.erase(x, y);
+        } else if (!state.tool.continueFromLast) {
             state.painting.charIndex = 0;
         }
 
@@ -41,14 +52,24 @@ class PaintingModule {
     }
 
     onPointerMove(e) {
+        const canvas = document.querySelector('#canvas-container canvas');
+        if (e.target !== canvas) return;
+
+        const { x, y } = this.getPos(e);
+
+        if (state.tool.mode === 'eraser') {
+            this.eraserPos = { x, y };
+            window.redraw();
+        }
+
         if (!state.painting.isActive || state.canvas.pinching) return;
         e.preventDefault();
 
         if (this.throttleFrame) return;
         this.throttleFrame = requestAnimationFrame(() => {
             this.throttleFrame = null;
-            const { x, y } = this.getPos(e);
-            this.continueStroke(x, y);
+            const pos = this.getPos(e);
+            this.continueStroke(pos.x, pos.y);
         });
     }
 
@@ -56,8 +77,21 @@ class PaintingModule {
         if (!state.painting.isActive) return;
         state.painting.isActive = false;
 
+        if (this.throttleFrame) {
+            cancelAnimationFrame(this.throttleFrame);
+            this.throttleFrame = null;
+        }
+
+        if (state.tool.mode === 'eraser') {
+            if (this.erasedThisStroke) {
+                historyModule.saveSnapshot();
+                this.erasedThisStroke = false;
+            }
+            window.redraw();
+            return;
+        }
+
         if (state.liveChars.length > 0) {
-            drawingModule.commitToBuffer(state.liveChars);
             historyModule.saveSnapshot();
             state.liveChars = [];
             window.redraw();
@@ -75,8 +109,16 @@ class PaintingModule {
     }
 
     continueStroke(x, y) {
+        if (!state.painting.isActive) return;
+
         const { painting, tool } = state;
         const current = { x, y };
+
+        if (tool.mode === 'eraser') {
+            this.eraserPos = { x, y };
+            this.erase(x, y);
+            return;
+        }
 
         painting.pathPoints.push(current);
         if (painting.pathPoints.length > PATH_HISTORY) {
@@ -85,31 +127,36 @@ class PaintingModule {
 
         if (!painting.lastPlacedPos) return;
 
-        const dist = mathUtils.distance(painting.lastPlacedPos, current);
-        const minSpacing = tool.fontSize * tool.spacing;
-
-        if (dist < minSpacing) return;
-
         const text = tool.text;
         if (!text.length) return;
 
-        const numChars = Math.floor(dist / minSpacing);
+        let placed = false;
 
-        for (let i = 1; i <= numChars; i++) {
-            const t = i / numChars;
-            const cx = mathUtils.lerp(painting.lastPlacedPos.x, x, t);
-            const cy = mathUtils.lerp(painting.lastPlacedPos.y, y, t);
+        while (true) {
+            const nextChar = text[painting.charIndex % text.length];
+            const maxCharWidth = drawingModule.measureCharWidth('M', tool.fontFamily, tool.fontSize);
+            const stepSize = maxCharWidth * tool.spacing;
+
+            const dist = mathUtils.distance(painting.lastPlacedPos, current);
+            if (dist < stepSize) break;
+
+            const moveAngle = Math.atan2(
+                current.y - painting.lastPlacedPos.y,
+                current.x - painting.lastPlacedPos.x
+            );
+
+            const cx = painting.lastPlacedPos.x + Math.cos(moveAngle) * stepSize;
+            const cy = painting.lastPlacedPos.y + Math.sin(moveAngle) * stepSize;
 
             const rawAngle = mathUtils.angleFromLastSegments(painting.pathPoints, PATH_HISTORY);
-            const readableAngle = mathUtils.makeReadable(rawAngle);
-            const finalAngle = mathUtils.lerpAngle(painting.smoothedAngle, readableAngle, ANGLE_BLEND);
+            if (painting.smoothedAngle === null) {
+                painting.smoothedAngle = rawAngle;
+            }
+            const finalAngle = mathUtils.lerpAngle(painting.smoothedAngle, rawAngle, ANGLE_BLEND);
             painting.smoothedAngle = finalAngle;
 
-            const char = text[painting.charIndex % text.length];
-            painting.charIndex = (painting.charIndex + 1) % text.length;
-
-            state.liveChars.push({
-                char,
+            const charObj = {
+                char: nextChar,
                 x: cx,
                 y: cy,
                 angle: finalAngle,
@@ -117,11 +164,34 @@ class PaintingModule {
                 size: tool.fontSize,
                 color: tool.color,
                 strokeWeight: tool.strokeWeight,
-            });
+            };
 
+            state.liveChars.push(charObj);
+            drawingModule.drawCharToBuffer(charObj);
+
+            painting.charIndex = (painting.charIndex + 1) % text.length;
             painting.lastPlacedPos = { x: cx, y: cy };
+            placed = true;
         }
 
+        if (placed) {
+            window.redraw();
+        }
+    }
+
+    erase(x, y) {
+        const buf = state.buffer;
+        if (!buf) return;
+
+        const radius = state.tool.eraserRadius;
+
+        buf.push();
+        buf.noStroke();
+        buf.fill(state.canvas.bgColor);
+        buf.ellipse(x, y, radius * 2, radius * 2);
+        buf.pop();
+
+        this.erasedThisStroke = true;
         window.redraw();
     }
 }

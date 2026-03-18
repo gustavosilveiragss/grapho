@@ -14,7 +14,9 @@
         "restart": "Restart",
         "undo": "Undo",
         "clear": "Clear",
-        "save": "Save"
+        "save": "Save",
+        "eraser": "Eraser",
+        "eraserRadius": "Radius"
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",

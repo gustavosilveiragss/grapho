@@ -32,6 +32,10 @@ body {
     background: #2a2a2a;
 }
 
+#canvas-container.eraser-mode {
+    cursor: none;
+}
+
 #canvas-container canvas {
     display: block;
     position: absolute;

@@ -14,7 +14,9 @@
         "restart": "Reiniciar",
         "undo": "Desfazer",
         "clear": "Limpar",
-        "save": "Salvar"
+        "save": "Salvar",
+        "eraser": "Borracha",
+        "eraserRadius": "Raio"
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",

@@ -1,6 +1,19 @@
 import { state } from './state.js';
 
+const SYSTEM_FONTS = {
+    'Times New Roman': 'serif',
+    'Arial': 'sans-serif',
+    'Helvetica': 'sans-serif',
+    'Georgia': 'serif',
+    'Verdana': 'sans-serif',
+    'Courier New': 'monospace',
+    'Trebuchet MS': 'sans-serif',
+    'Impact': 'sans-serif',
+    'Comic Sans MS': 'cursive',
+};
+
 const FALLBACK_FONTS = [
+    ...Object.keys(SYSTEM_FONTS),
     'Comic Neue', 'Inter', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Nunito',
     'Raleway', 'Ubuntu', 'Oswald', 'Rubik', 'Work Sans', 'Quicksand', 'Comfortaa',
     'Bebas Neue', 'DM Sans', 'Space Grotesk', 'Outfit', 'Plus Jakarta Sans',
@@ -42,7 +55,10 @@ const FALLBACK_FONTS = [
 
 class FontsModule {
     constructor() {
-        this.fonts = FALLBACK_FONTS.map((f) => ({ family: f }));
+        this.fonts = FALLBACK_FONTS.map((f) => ({
+            family: f,
+            category: SYSTEM_FONTS[f] || 'sans-serif',
+        }));
         this.loadedFonts = new Set();
         this.observer = null;
     }
@@ -124,6 +140,11 @@ class FontsModule {
 
     ensureFontLoaded(family) {
         if (this.loadedFonts.has(family)) return;
+
+        if (family in SYSTEM_FONTS) {
+            this.loadedFonts.add(family);
+            return;
+        }
 
         const link = document.createElement('link');
         link.rel = 'stylesheet';

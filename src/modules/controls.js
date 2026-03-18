@@ -24,8 +24,9 @@ class ControlsModule {
     setupNumberInputs() {
         const inputs = [
             { id: 'font-size', update: (val) => { state.tool.fontSize = parseInt(val) || 32; } },
-            { id: 'spacing', update: (val) => { state.tool.spacing = parseFloat(val) || 0.6; } },
+            { id: 'spacing', update: (val) => { state.tool.spacing = parseFloat(val) || 1.0; } },
             { id: 'stroke-weight', update: (val) => { state.tool.strokeWeight = parseFloat(val) || 0; } },
+            { id: 'eraser-radius', update: (val) => { state.tool.eraserRadius = parseInt(val) || 20; } },
         ];
 
         inputs.forEach(({ id, update }) => {
@@ -75,6 +76,29 @@ class ControlsModule {
                 lucide.createIcons({ nodes: [icon] });
             }
         }
+    }
+
+    toggleEraser() {
+        const isEraser = state.tool.mode === 'eraser';
+        state.tool.mode = isEraser ? 'paint' : 'eraser';
+
+        const btn = document.getElementById('eraser-btn');
+        const options = document.getElementById('eraser-options');
+        const container = document.getElementById('canvas-container');
+
+        if (btn) {
+            btn.classList.toggle('active', !isEraser);
+        }
+
+        if (options) {
+            options.style.display = isEraser ? 'none' : 'flex';
+        }
+
+        if (container) {
+            container.classList.toggle('eraser-mode', !isEraser);
+        }
+
+        window.redraw();
     }
 }
 

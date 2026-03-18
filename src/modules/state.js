@@ -15,8 +15,10 @@ export const state = {
         fontSize: 32,
         color: '#000000',
         strokeWeight: 0,
-        spacing: 0.6,
+        spacing: 1.0,
         continueFromLast: true,
+        mode: 'paint',
+        eraserRadius: 20,
     },
     painting: {
         isActive: false,
