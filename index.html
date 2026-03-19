@@ -10,6 +10,49 @@
     <div class="app-container">
         <div id="canvas-container"></div>
 
+        <div id="color-dock" class="hidden">
+            <div class="color-dock-section">
+                <label id="color-dock-label">Texto</label>
+                <div class="color-row">
+                    <div class="dock-color-swatch" id="dock-color-swatch"></div>
+                    <input type="color" id="native-color-picker" value="#000000">
+                    <button class="eyedropper-btn" id="active-eyedropper">
+                        <i data-lucide="pipette"></i>
+                    </button>
+                </div>
+                <input type="text" id="active-color-input" value="#000000">
+            </div>
+            <div class="color-dock-section">
+                <label data-i18n="colorDock.history">Recentes</label>
+                <div id="color-history" class="color-history-grid"></div>
+            </div>
+        </div>
+
+        <button class="layer-dock-toggle" id="layer-dock-toggle">
+            <i data-lucide="layers"></i>
+        </button>
+
+        <div id="layer-dock">
+            <div class="layer-dock-header">
+                <span data-i18n="layers.title">Camadas</span>
+                <div class="layer-dock-actions">
+                    <button class="layer-action-btn" id="layer-add-btn" title="Adicionar">
+                        <i data-lucide="plus"></i>
+                    </button>
+                    <button class="layer-action-btn danger" id="layer-remove-btn" disabled>
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                    <button class="layer-action-btn" id="layer-up-btn" disabled>
+                        <i data-lucide="chevron-up"></i>
+                    </button>
+                    <button class="layer-action-btn" id="layer-down-btn" disabled>
+                        <i data-lucide="chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="layer-list" id="layer-list"></div>
+        </div>
+
         <div id="lang-switcher">
             <button class="flag-button active" data-locale="pt-BR"
                     onclick="window.i18nModule?.switchLanguage('pt-BR')">🇧🇷</button>
@@ -67,16 +110,13 @@
                     </div>
 
                     <div class="toolbar-row">
-                        <div class="tool-group">
-                            <i data-lucide="palette"></i>
-                            <label for="color-picker" data-i18n="toolbar.color"></label>
-                            <input type="color" id="color-picker" value="#000000">
-                        </div>
-
-                        <div class="tool-group">
-                            <i data-lucide="paint-bucket"></i>
-                            <label for="bg-color-picker" data-i18n="toolbar.bgColor"></label>
-                            <input type="color" id="bg-color-picker" value="#ffffff">
+                        <div class="tool-group color-swatches">
+                            <div class="toolbar-swatch" id="text-color-swatch" title="Cor do texto">
+                                <i data-lucide="type"></i>
+                            </div>
+                            <div class="toolbar-swatch" id="bg-color-swatch" title="Cor de fundo">
+                                <i data-lucide="paint-bucket"></i>
+                            </div>
                         </div>
 
                         <div class="separator"></div>

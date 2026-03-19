@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { mathUtils } from './mathUtils.js';
 import { drawingModule } from './drawing.js';
 import { historyModule } from './history.js';
+import { layersModule } from './layers.js';
 
 const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
@@ -11,6 +12,7 @@ class PaintingModule {
         this.throttleFrame = null;
         this.eraserPos = null;
         this.erasedThisStroke = false;
+        this.savedSnapshotThisStroke = false;
     }
 
     setup() {
@@ -38,6 +40,8 @@ class PaintingModule {
         state.painting.pathPoints = [{ x, y }];
         state.painting.lastPlacedPos = { x, y };
         state.painting.smoothedAngle = null;
+
+        this.savedSnapshotThisStroke = false;
 
         if (state.tool.mode === 'eraser') {
             this.eraserPos = { x, y };
@@ -83,17 +87,15 @@ class PaintingModule {
         }
 
         if (state.tool.mode === 'eraser') {
-            if (this.erasedThisStroke) {
-                historyModule.saveSnapshot();
-                this.erasedThisStroke = false;
-            }
+            this.erasedThisStroke = false;
+            layersModule.refreshThumbnails();
             window.redraw();
             return;
         }
 
         if (state.liveChars.length > 0) {
-            historyModule.saveSnapshot();
             state.liveChars = [];
+            layersModule.refreshThumbnails();
             window.redraw();
         }
     }
@@ -155,6 +157,11 @@ class PaintingModule {
             const finalAngle = mathUtils.lerpAngle(painting.smoothedAngle, rawAngle, ANGLE_BLEND);
             painting.smoothedAngle = finalAngle;
 
+            if (!this.savedSnapshotThisStroke) {
+                historyModule.saveSnapshot();
+                this.savedSnapshotThisStroke = true;
+            }
+
             const charObj = {
                 char: nextChar,
                 x: cx,
@@ -180,15 +187,22 @@ class PaintingModule {
     }
 
     erase(x, y) {
-        const buf = state.buffer;
+        const buf = layersModule.getActiveBuffer();
         if (!buf) return;
+
+        if (!this.savedSnapshotThisStroke) {
+            historyModule.saveSnapshot();
+            this.savedSnapshotThisStroke = true;
+        }
 
         const radius = state.tool.eraserRadius;
 
         buf.push();
+        buf.erase();
         buf.noStroke();
-        buf.fill(state.canvas.bgColor);
+        buf.fill(255);
         buf.ellipse(x, y, radius * 2, radius * 2);
+        buf.noErase();
         buf.pop();
 
         this.erasedThisStroke = true;

@@ -6,10 +6,16 @@ class ExportModule {
     }
 
     savePNG() {
-        if (!state.buffer) return;
+        if (!state.layers.items.length) return;
 
         this.p.background(state.canvas.bgColor);
-        this.p.image(state.buffer, 0, 0);
+
+        for (const layer of state.layers.items) {
+            if (layer.visible && layer.buffer) {
+                this.p.image(layer.buffer, 0, 0);
+            }
+        }
+
         this.p.saveCanvas('ascii-paint', 'png');
         this.p.redraw();
     }

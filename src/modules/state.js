@@ -27,9 +27,18 @@ export const state = {
         smoothedAngle: 0,
         lastPlacedPos: null,
     },
-    buffer: null,
+    layers: {
+        items: [],
+        activeIndex: 0,
+        maxLayers: 10,
+        nextId: 0,
+    },
     liveChars: [],
     settings: {
         locale: localStorage.getItem('ascii-paint-locale') || 'pt-BR',
+    },
+    colorHistory: {
+        colors: [],
+        maxColors: 12,
     },
 };

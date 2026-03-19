@@ -9,6 +9,8 @@ import { controlsModule } from './modules/controls.js';
 import { fontsModule } from './modules/fonts.js';
 import { historyModule } from './modules/history.js';
 import { exportModule } from './modules/export.js';
+import { colorPickerModule } from './modules/colorPicker.js';
+import { layersModule } from './modules/layers.js';
 
 async function initializeApp() {
     if (document.readyState === 'loading') {
@@ -30,16 +32,19 @@ async function initializeApp() {
         historyModule,
         exportModule,
         fontsModule,
+        layersModule,
         i18nModule: i18n,
     });
 
     const sketch = (p) => {
         p.setup = () => {
             canvasModule.setup(p);
+            layersModule.setup(p);
             controlsModule.setup();
             fontsModule.setup();
             historyModule.setup();
             exportModule.setup(p);
+            colorPickerModule.setup();
 
             setTimeout(() => paintingModule.setup(), 50);
         };

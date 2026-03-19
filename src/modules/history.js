@@ -1,7 +1,8 @@
 import { state } from './state.js';
 import { i18n } from './i18n.js';
+import { layersModule } from './layers.js';
 
-const MAX_SNAPSHOTS = 30;
+const MAX_SNAPSHOTS = 20;
 
 class HistoryModule {
     constructor() {
@@ -24,7 +25,12 @@ class HistoryModule {
 
     captureState() {
         return {
-            image: state.buffer.get(),
+            layers: state.layers.items.map(layer => ({
+                id: layer.id,
+                name: layer.name,
+                image: layer.buffer.get(),
+                visible: layer.visible,
+            })),
             tool: { ...state.tool },
             bgColor: state.canvas.bgColor,
             charIndex: state.painting.charIndex,
@@ -32,17 +38,26 @@ class HistoryModule {
     }
 
     restoreState(snapshot) {
-        state.buffer.clear();
-        state.buffer.image(snapshot.image, 0, 0);
+        snapshot.layers.forEach((layerData, index) => {
+            const layer = state.layers.items[index];
+            if (layer && layer.buffer) {
+                layer.buffer.clear();
+                layer.buffer.image(layerData.image, 0, 0);
+                layer.visible = layerData.visible;
+                layer.name = layerData.name;
+            }
+        });
+
         Object.assign(state.tool, snapshot.tool);
         state.canvas.bgColor = snapshot.bgColor;
         state.painting.charIndex = snapshot.charIndex;
         this.syncUI();
+        layersModule.updateDock();
         window.redraw();
     }
 
     saveSnapshot() {
-        if (!state.buffer) return;
+        if (!state.layers.items.length) return;
 
         this.undoStack.push(this.captureState());
         this.redoStack = [];
@@ -53,22 +68,24 @@ class HistoryModule {
     }
 
     undo() {
-        if (!this.undoStack.length || !state.buffer) return;
+        if (!this.undoStack.length || !state.layers.items.length) return;
         this.redoStack.push(this.captureState());
         this.restoreState(this.undoStack.pop());
     }
 
     redo() {
-        if (!this.redoStack.length || !state.buffer) return;
+        if (!this.redoStack.length || !state.layers.items.length) return;
         this.undoStack.push(this.captureState());
         this.restoreState(this.redoStack.pop());
     }
 
     clear() {
-        if (!state.buffer) return;
+        const buf = layersModule.getActiveBuffer();
+        if (!buf) return;
         this.saveSnapshot();
-        state.buffer.clear();
+        buf.clear();
         state.painting.charIndex = 0;
+        layersModule.updateDock();
         window.redraw();
     }
 

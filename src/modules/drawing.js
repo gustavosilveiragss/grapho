@@ -1,5 +1,6 @@
 import { state } from './state.js';
 import { paintingModule } from './painting.js';
+import { layersModule } from './layers.js';
 
 class DrawingModule {
     constructor() {
@@ -10,8 +11,10 @@ class DrawingModule {
     draw(p) {
         p.background(state.canvas.bgColor);
 
-        if (state.buffer) {
-            p.image(state.buffer, 0, 0);
+        for (const layer of state.layers.items) {
+            if (layer.visible && layer.buffer) {
+                p.image(layer.buffer, 0, 0);
+            }
         }
 
         if (state.tool.mode === 'eraser' && paintingModule.eraserPos) {
@@ -30,7 +33,7 @@ class DrawingModule {
     }
 
     drawCharToBuffer(ch) {
-        const buf = state.buffer;
+        const buf = layersModule.getActiveBuffer();
         if (!buf) return;
 
         buf.push();
@@ -79,7 +82,7 @@ class DrawingModule {
     }
 
     commitToBuffer(chars) {
-        const buf = state.buffer;
+        const buf = layersModule.getActiveBuffer();
         if (!buf) return;
 
         for (const ch of chars) {

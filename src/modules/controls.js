@@ -40,20 +40,6 @@ class ControlsModule {
     }
 
     setupColorPickers() {
-        const colorPicker = document.getElementById('color-picker');
-        if (colorPicker) {
-            colorPicker.addEventListener('input', (e) => {
-                state.tool.color = e.target.value;
-            });
-        }
-
-        const bgColorPicker = document.getElementById('bg-color-picker');
-        if (bgColorPicker) {
-            bgColorPicker.addEventListener('input', (e) => {
-                state.canvas.bgColor = e.target.value;
-                window.redraw();
-            });
-        }
     }
 
     toggleContinue() {

@@ -18,6 +18,16 @@
         "eraser": "Borracha",
         "eraserRadius": "Raio"
     },
+    "colorDock": {
+        "textColor": "Texto",
+        "bgColor": "Fundo",
+        "history": "Recentes"
+    },
+    "layers": {
+        "title": "Camadas",
+        "layer": "Camada",
+        "confirmDelete": "Excluir esta camada? Esta ação é irreversível."
+    },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",
         "pan": "Espaço + Arrastar: Mover"

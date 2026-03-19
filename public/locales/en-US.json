@@ -18,6 +18,16 @@
         "eraser": "Eraser",
         "eraserRadius": "Radius"
     },
+    "colorDock": {
+        "textColor": "Text",
+        "bgColor": "Background",
+        "history": "Recent"
+    },
+    "layers": {
+        "title": "Layers",
+        "layer": "Layer",
+        "confirmDelete": "Delete this layer? This action cannot be undone."
+    },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",
         "pan": "Space + Drag: Move"

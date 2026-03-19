@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { layersModule } from './layers.js';
 
 class CanvasModule {
     constructor() {
@@ -29,8 +30,7 @@ class CanvasModule {
         const canvas = p.createCanvas(w, h);
         canvas.parent('canvas-container');
 
-        state.buffer = p.createGraphics(w, h);
-        state.buffer.pixelDensity(density);
+        layersModule.initializeLayers(p);
 
         p.noLoop();
 
