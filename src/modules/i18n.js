@@ -14,7 +14,7 @@ class I18n {
     async switchLanguage(locale) {
         this.currentLocale = locale;
         state.settings.locale = locale;
-        localStorage.setItem('ascii-paint-locale', locale);
+        localStorage.setItem('grapho-locale', locale);
 
         await this.loadLocale(locale);
         this.updateDOM();

@@ -4,7 +4,7 @@ import { layersModule } from './layers.js';
 import { colorPickerModule } from './colorPicker.js';
 import { i18n } from './i18n.js';
 
-const STORAGE_KEY = 'ascii-paint-state';
+const STORAGE_KEY = 'grapho-state';
 const VERSION = 1;
 
 class PersistenceModule {

@@ -5,7 +5,7 @@ import { persistenceModule } from './persistence.js';
 import { layersModule } from './layers.js';
 import { i18n } from './i18n.js';
 
-const STORAGE_KEY = 'ascii-paint-symbol-history';
+const STORAGE_KEY = 'grapho-symbol-history';
 
 class SymbolPickerModule {
     constructor() {

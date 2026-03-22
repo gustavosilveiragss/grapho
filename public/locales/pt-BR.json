@@ -1,6 +1,6 @@
 {
     "app": {
-        "title": "ASCII Paint"
+        "title": "Grapho"
     },
     "toolbar": {
         "placeholder": "Texto para pintar...",

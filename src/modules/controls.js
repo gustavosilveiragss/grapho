@@ -109,9 +109,9 @@ class ControlsModule {
     }
 
     togglePressure() {
-        const hasSeenDialog = localStorage.getItem('ascii-paint-pressure-dialog-seen');
+        const hasSeenDialog = localStorage.getItem('grapho-pressure-dialog-seen');
         if (!hasSeenDialog) {
-            localStorage.setItem('ascii-paint-pressure-dialog-seen', 'true');
+            localStorage.setItem('grapho-pressure-dialog-seen', 'true');
             this.showPressureDialog();
         }
 

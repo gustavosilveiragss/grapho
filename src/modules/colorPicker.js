@@ -3,7 +3,7 @@ import { i18n } from './i18n.js';
 import { layersModule } from './layers.js';
 import { persistenceModule } from './persistence.js';
 
-const STORAGE_KEY = 'ascii-paint-color-history';
+const STORAGE_KEY = 'grapho-color-history';
 
 class ColorPickerModule {
     constructor() {

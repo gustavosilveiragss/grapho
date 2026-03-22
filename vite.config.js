@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: '/ascii-paint/',
+    base: '/grapho/',
     build: {
         outDir: 'dist',
         assetsDir: 'assets',

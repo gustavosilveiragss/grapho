@@ -1,4 +1,4 @@
-# ASCII Paint
+# Grapho
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
@@ -15,8 +15,8 @@ Paint text along freehand paths on a canvas. Characters follow the direction of 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/ascii-paint.git
-   cd ascii-paint
+   git clone https://github.com/yourusername/grapho.git
+   cd grapho
    ```
 
 2. **Install dependencies**

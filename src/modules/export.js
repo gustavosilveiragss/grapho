@@ -16,7 +16,7 @@ class ExportModule {
             }
         }
 
-        this.p.saveCanvas('ascii-paint', 'png');
+        this.p.saveCanvas('grapho', 'png');
         this.p.redraw();
     }
 }

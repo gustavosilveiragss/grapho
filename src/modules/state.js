@@ -35,7 +35,7 @@ export const state = {
     },
     liveChars: [],
     settings: {
-        locale: localStorage.getItem('ascii-paint-locale') || 'pt-BR',
+        locale: localStorage.getItem('grapho-locale') || 'pt-BR',
     },
     colorHistory: {
         colors: [],

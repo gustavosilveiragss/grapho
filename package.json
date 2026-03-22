@@ -1,5 +1,5 @@
 {
-  "name": "ascii-paint",
+  "name": "grapho",
   "version": "1.0.0",
   "description": "Paint text along paths on a canvas",
   "main": "src/app.js",
@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "keywords": [
-    "ascii",
+    "grapho",
     "paint",
     "text",
     "canvas"
