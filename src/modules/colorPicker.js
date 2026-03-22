@@ -151,6 +151,7 @@ class ColorPickerModule {
         if (window.innerWidth <= 768) {
             layersModule.collapseDock();
         }
+        window.symbolPickerModule?.closeDock();
 
         this.activeType = type;
         const dock = document.getElementById('color-dock');

@@ -11,8 +11,11 @@ import { historyModule } from './modules/history.js';
 import { exportModule } from './modules/export.js';
 import { colorPickerModule } from './modules/colorPicker.js';
 import { layersModule } from './modules/layers.js';
+import { symbolPickerModule } from './modules/symbolPicker.js';
 import { dialogModule } from './modules/dialog.js';
 import { persistenceModule } from './modules/persistence.js';
+import { sliderInputModule } from './modules/sliderInput.js';
+import { mobileDrawerModule } from './modules/mobileDrawer.js';
 
 async function initializeApp() {
     if (document.readyState === 'loading') {
@@ -38,6 +41,8 @@ async function initializeApp() {
         dialogModule,
         persistenceModule,
         i18nModule: i18n,
+        colorPickerModule,
+        symbolPickerModule,
     });
 
     const showLoading = (show) => {
@@ -72,10 +77,13 @@ async function initializeApp() {
             // }
 
             controlsModule.setup();
+            sliderInputModule.setup();
             fontsModule.setup();
             historyModule.setup();
             exportModule.setup(p);
             colorPickerModule.setup();
+            symbolPickerModule.setup();
+            mobileDrawerModule.setup();
 
             setTimeout(() => paintingModule.setup(), 50);
         };

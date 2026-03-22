@@ -41,6 +41,10 @@ export const state = {
         colors: [],
         maxColors: 12,
     },
+    symbolHistory: {
+        symbols: [],
+        maxSymbols: 16,
+    },
     pressure: {
         penDetected: false,
         enabled: false,

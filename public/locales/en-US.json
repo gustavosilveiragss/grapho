@@ -38,6 +38,11 @@
         "bgColor": "Background",
         "history": "Recent"
     },
+    "symbolDock": {
+        "recent": "Recent",
+        "search": "Search...",
+        "noResults": "No results"
+    },
     "layers": {
         "title": "Layers",
         "layer": "Layer",

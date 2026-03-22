@@ -38,6 +38,11 @@
         "bgColor": "Fundo",
         "history": "Recentes"
     },
+    "symbolDock": {
+        "recent": "Recentes",
+        "search": "Buscar...",
+        "noResults": "Nenhum resultado"
+    },
     "layers": {
         "title": "Camadas",
         "layer": "Camada",

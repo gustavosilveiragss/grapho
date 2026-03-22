@@ -8,6 +8,14 @@ import { persistenceModule } from './persistence.js';
 const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
 
+function getGraphemeClusters(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+        const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+        return [...segmenter.segment(text)].map(s => s.segment);
+    }
+    return Array.from(text);
+}
+
 class PaintingModule {
     constructor() {
         this.throttleFrame = null;
@@ -142,16 +150,16 @@ class PaintingModule {
 
         if (!painting.lastPlacedPos) return;
 
-        const text = tool.text;
-        if (!text.length) return;
+        const textChars = getGraphemeClusters(tool.text);
+        if (!textChars.length) return;
 
         let placed = false;
 
         while (true) {
-            const nextChar = text[painting.charIndex % text.length];
+            const nextChar = textChars[painting.charIndex % textChars.length];
             const effectiveSize = this.calculatePressureSize(tool.fontSize);
             const maxCharWidth = drawingModule.measureCharWidth('M', tool.fontFamily, effectiveSize);
-            const stepSize = maxCharWidth * tool.spacing;
+            const stepSize = tool.spacing > 0 ? maxCharWidth * tool.spacing : 1;
 
             const dist = mathUtils.distance(painting.lastPlacedPos, current);
             if (dist < stepSize) break;
@@ -190,7 +198,7 @@ class PaintingModule {
             state.liveChars.push(charObj);
             drawingModule.drawCharToBuffer(charObj);
 
-            painting.charIndex = (painting.charIndex + 1) % text.length;
+            painting.charIndex = (painting.charIndex + 1) % textChars.length;
             painting.lastPlacedPos = { x: cx, y: cy };
             placed = true;
         }

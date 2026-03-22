@@ -3,10 +3,17 @@ import { i18n } from './i18n.js';
 import { dialogModule } from './dialog.js';
 import { persistenceModule } from './persistence.js';
 
+function getGraphemeClusters(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+        const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+        return [...segmenter.segment(text)].map(s => s.segment);
+    }
+    return Array.from(text);
+}
+
 class ControlsModule {
     setup() {
         this.setupTextInput();
-        this.setupNumberInputs();
         this.setupColorPickers();
         window.addEventListener('penDetected', () => this.showPressureUI());
     }
@@ -17,32 +24,12 @@ class ControlsModule {
 
         input.addEventListener('input', (e) => {
             const newText = e.target.value;
-            if (state.painting.charIndex >= newText.length) {
+            const charCount = getGraphemeClusters(newText).length;
+            if (state.painting.charIndex >= charCount) {
                 state.painting.charIndex = 0;
             }
             state.tool.text = newText;
             persistenceModule.scheduleSave();
-        });
-    }
-
-    setupNumberInputs() {
-        const inputs = [
-            { id: 'font-size', update: (val) => { state.tool.fontSize = parseInt(val) || 32; } },
-            { id: 'spacing', update: (val) => { state.tool.spacing = parseFloat(val) || 1.0; } },
-            { id: 'stroke-weight', update: (val) => { state.tool.strokeWeight = parseFloat(val) || 0; } },
-            { id: 'eraser-radius', update: (val) => { state.tool.eraserRadius = parseInt(val) || 20; } },
-            { id: 'pressure-min', update: (val) => { state.pressure.minMultiplier = parseFloat(val) || 0.5; } },
-            { id: 'pressure-max', update: (val) => { state.pressure.maxMultiplier = parseFloat(val) || 2.0; } },
-        ];
-
-        inputs.forEach(({ id, update }) => {
-            const el = document.getElementById(id);
-            if (!el) return;
-
-            el.addEventListener('input', (e) => {
-                update(e.target.value);
-                persistenceModule.scheduleSave();
-            });
         });
     }
 

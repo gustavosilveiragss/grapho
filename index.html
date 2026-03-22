@@ -34,6 +34,28 @@
             </div>
         </div>
 
+        <div id="symbol-dock" class="hidden">
+            <div class="symbol-dock-header">
+                <div class="symbol-dock-tabs" id="symbol-tabs">
+                    <button class="symbol-dock-tab active" data-tab="symbols">
+                        <i data-lucide="shapes"></i>
+                    </button>
+                    <button class="symbol-dock-tab" data-tab="emojis">
+                        <i data-lucide="smile"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="symbol-search-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="symbol-search" data-i18n-placeholder="symbolDock.search" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="symbol-content" id="symbol-content"></div>
+            <div class="symbol-history-section">
+                <label data-i18n="symbolDock.recent">Recentes</label>
+                <div id="symbol-history" class="symbol-history-grid"></div>
+            </div>
+        </div>
+
         <button class="layer-dock-toggle" id="layer-dock-toggle">
             <i data-lucide="layers"></i>
         </button>
@@ -90,7 +112,7 @@
                 </div>
 
                 <div class="toolbar-controls">
-                    <div class="toolbar-row">
+                    <div class="toolbar-row toolbar-row-top">
                         <div class="tool-group font-group">
                             <i data-lucide="type"></i>
                             <div class="font-selector">
@@ -101,28 +123,6 @@
                             </div>
                         </div>
 
-                        <div class="separator"></div>
-
-                        <div class="tool-group">
-                            <i data-lucide="a-large-small"></i>
-                            <label for="font-size" data-i18n="toolbar.size"></label>
-                            <input type="number" id="font-size" min="8" max="120" value="32" step="1">
-                        </div>
-
-                        <div class="tool-group">
-                            <i data-lucide="space"></i>
-                            <label for="spacing" data-i18n="toolbar.spacing"></label>
-                            <input type="number" id="spacing" min="0.8" max="3" value="1" step="0.1">
-                        </div>
-
-                        <div class="tool-group">
-                            <i data-lucide="pen-line"></i>
-                            <label for="stroke-weight" data-i18n="toolbar.stroke"></label>
-                            <input type="number" id="stroke-weight" min="0" max="5" value="0" step="0.5">
-                        </div>
-                    </div>
-
-                    <div class="toolbar-row">
                         <div class="tool-group color-swatches">
                             <div class="toolbar-swatch" id="text-color-swatch" title="Cor do texto">
                                 <i data-lucide="type"></i>
@@ -132,42 +132,18 @@
                             </div>
                         </div>
 
-                        <div class="separator"></div>
-
-                        <div class="tool-group">
+                        <div class="tool-group tools-group">
                             <button class="dock-button toggle-btn active" id="continue-btn"
                                     onclick="window.controlsModule?.toggleContinue()">
                                 <i data-lucide="repeat"></i>
                                 <span data-i18n="toolbar.continue"></span>
                             </button>
-                        </div>
-
-                        <div class="tool-group">
                             <button class="dock-button toggle-btn" id="eraser-btn"
                                     onclick="window.controlsModule?.toggleEraser()">
                                 <i data-lucide="eraser"></i>
                                 <span data-i18n="toolbar.eraser"></span>
                             </button>
                         </div>
-
-                        <div class="tool-group" id="eraser-options" style="display: none;">
-                            <i data-lucide="circle"></i>
-                            <label for="eraser-radius" data-i18n="toolbar.eraserRadius"></label>
-                            <input type="number" id="eraser-radius" min="8" max="100" value="20" step="2">
-                        </div>
-
-                        <div class="tool-group pressure-controls" id="pressure-controls" style="display: none;">
-                            <i data-lucide="pen-tool"></i>
-                            <button class="dock-button toggle-btn" id="pressure-btn"
-                                    onclick="window.controlsModule?.togglePressure()">
-                                <span data-i18n="toolbar.pressure">Pressure</span>
-                            </button>
-                            <input type="number" id="pressure-min" min="0.1" max="1" value="0.5" step="0.1" title="Min">
-                            <span class="pressure-separator">-</span>
-                            <input type="number" id="pressure-max" min="1" max="3" value="2" step="0.1" title="Max">
-                        </div>
-
-                        <div class="separator"></div>
 
                         <div class="tool-group actions">
                             <button class="dock-button" id="undo-btn" onclick="window.historyModule?.undo()">
@@ -184,8 +160,98 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="toolbar-row toolbar-row-sliders">
+                        <div class="slider-input slider-large" data-field="font-size">
+                            <i data-lucide="a-large-small"></i>
+                            <label for="font-size" data-i18n="toolbar.size"></label>
+                            <div class="slider-track">
+                                <input type="range" id="font-size" min="8" max="120" value="32" step="1">
+                            </div>
+                            <button class="slider-value" id="font-size-value">32</button>
+                            <input type="number" class="slider-edit" id="font-size-edit" min="8" max="120" step="1">
+                        </div>
+
+                        <div class="slider-input slider-large" data-field="spacing">
+                            <i data-lucide="space"></i>
+                            <label for="spacing" data-i18n="toolbar.spacing"></label>
+                            <div class="slider-track">
+                                <input type="range" id="spacing" min="0" max="3" value="1" step="0.1">
+                            </div>
+                            <button class="slider-value" id="spacing-value">1.0</button>
+                            <input type="number" class="slider-edit" id="spacing-edit" min="0" max="3" step="0.1">
+                        </div>
+
+                        <div class="slider-input slider-large" data-field="stroke-weight">
+                            <i data-lucide="pen-line"></i>
+                            <label for="stroke-weight" data-i18n="toolbar.stroke"></label>
+                            <div class="slider-track">
+                                <input type="range" id="stroke-weight" min="0" max="5" value="0" step="0.5">
+                            </div>
+                            <button class="slider-value" id="stroke-weight-value">0</button>
+                            <input type="number" class="slider-edit" id="stroke-weight-edit" min="0" max="5" step="0.5">
+                        </div>
+
+                        <div class="slider-input slider-large" id="eraser-options" data-field="eraser-radius" style="display: none;">
+                            <i data-lucide="circle"></i>
+                            <label for="eraser-radius" data-i18n="toolbar.eraserRadius"></label>
+                            <div class="slider-track">
+                                <input type="range" id="eraser-radius" min="8" max="100" value="20" step="2">
+                            </div>
+                            <button class="slider-value" id="eraser-radius-value">20</button>
+                            <input type="number" class="slider-edit" id="eraser-radius-edit" min="8" max="100" step="2">
+                        </div>
+                    </div>
+
+                    <div class="toolbar-row toolbar-row-pressure" id="pressure-controls" style="display: none;">
+                        <i data-lucide="pen-tool"></i>
+                        <button class="dock-button toggle-btn" id="pressure-btn"
+                                onclick="window.controlsModule?.togglePressure()">
+                            <span data-i18n="toolbar.pressure">Pressure</span>
+                        </button>
+                        <div class="slider-input slider-large" data-field="pressure-min">
+                            <label>Min</label>
+                            <div class="slider-track">
+                                <input type="range" id="pressure-min" min="0.1" max="1" value="0.5" step="0.1">
+                            </div>
+                            <button class="slider-value" id="pressure-min-value">0.5</button>
+                            <input type="number" class="slider-edit" id="pressure-min-edit" min="0.1" max="1" step="0.1">
+                        </div>
+                        <div class="slider-input slider-large" data-field="pressure-max">
+                            <label>Max</label>
+                            <div class="slider-track">
+                                <input type="range" id="pressure-max" min="1" max="3" value="2" step="0.1">
+                            </div>
+                            <button class="slider-value" id="pressure-max-value">2.0</button>
+                            <input type="number" class="slider-edit" id="pressure-max-edit" min="1" max="3" step="0.1">
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="dock-fab-container" id="dock-fabs">
+            <button class="dock-fab" id="fab-color" aria-label="Cores">
+                <div class="fab-swatch" id="fab-color-swatch"></div>
+            </button>
+            <button class="dock-fab" id="fab-symbols" aria-label="Símbolos">
+                <i data-lucide="shapes"></i>
+            </button>
+            <button class="dock-fab" id="fab-layers" aria-label="Camadas">
+                <i data-lucide="layers"></i>
+            </button>
+        </div>
+
+        <div class="mobile-drawer-backdrop" id="drawer-backdrop"></div>
+        <div class="mobile-drawer" id="mobile-drawer">
+            <div class="drawer-handle"><span class="handle-bar"></span></div>
+            <div class="drawer-header">
+                <h3 class="drawer-title"></h3>
+                <button class="drawer-close" id="drawer-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="drawer-content" id="drawer-content"></div>
         </div>
 
         <div id="dialog-overlay" class="dialog-overlay" style="display: none;">
