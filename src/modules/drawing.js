@@ -13,7 +13,15 @@ class DrawingModule {
 
         for (const layer of state.layers.items) {
             if (layer.visible && layer.buffer) {
-                p.image(layer.buffer, 0, 0);
+                const opacity = layer.opacity ?? 1.0;
+                if (opacity < 1.0) {
+                    p.push();
+                    p.tint(255, opacity * 255);
+                    p.image(layer.buffer, 0, 0);
+                    p.pop();
+                } else {
+                    p.image(layer.buffer, 0, 0);
+                }
             }
         }
 

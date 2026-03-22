@@ -8,6 +8,12 @@
 </head>
 <body>
     <div class="app-container">
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <span data-i18n="loading.restoring">Restaurando...</span>
+            </div>
+        </div>
         <div id="canvas-container"></div>
 
         <div id="color-dock" class="hidden">
@@ -36,18 +42,25 @@
             <div class="layer-dock-header">
                 <span data-i18n="layers.title">Camadas</span>
                 <div class="layer-dock-actions">
-                    <button class="layer-action-btn" id="layer-add-btn" title="Adicionar">
-                        <i data-lucide="plus"></i>
-                    </button>
-                    <button class="layer-action-btn danger" id="layer-remove-btn" disabled>
-                        <i data-lucide="trash-2"></i>
-                    </button>
-                    <button class="layer-action-btn" id="layer-up-btn" disabled>
-                        <i data-lucide="chevron-up"></i>
-                    </button>
-                    <button class="layer-action-btn" id="layer-down-btn" disabled>
-                        <i data-lucide="chevron-down"></i>
-                    </button>
+                    <div class="layer-action-grid">
+                        <button class="layer-action-btn" id="layer-add-btn" title="Adicionar">
+                            <i data-lucide="plus"></i>
+                        </button>
+                        <button class="layer-action-btn danger" id="layer-remove-btn" disabled>
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                        <button class="layer-action-btn" id="layer-up-btn" disabled>
+                            <i data-lucide="chevron-up"></i>
+                        </button>
+                        <button class="layer-action-btn" id="layer-down-btn" disabled>
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="layer-opacity-control">
+                        <i data-lucide="sun"></i>
+                        <input type="range" id="layer-opacity" min="0" max="100" value="100">
+                        <span id="layer-opacity-value">100%</span>
+                    </div>
                 </div>
             </div>
             <div class="layer-list" id="layer-list"></div>
@@ -143,6 +156,17 @@
                             <input type="number" id="eraser-radius" min="8" max="100" value="20" step="2">
                         </div>
 
+                        <div class="tool-group pressure-controls" id="pressure-controls" style="display: none;">
+                            <i data-lucide="pen-tool"></i>
+                            <button class="dock-button toggle-btn" id="pressure-btn"
+                                    onclick="window.controlsModule?.togglePressure()">
+                                <span data-i18n="toolbar.pressure">Pressure</span>
+                            </button>
+                            <input type="number" id="pressure-min" min="0.1" max="1" value="0.5" step="0.1" title="Min">
+                            <span class="pressure-separator">-</span>
+                            <input type="number" id="pressure-max" min="1" max="3" value="2" step="0.1" title="Max">
+                        </div>
+
                         <div class="separator"></div>
 
                         <div class="tool-group actions">
@@ -160,6 +184,22 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dialog-overlay" class="dialog-overlay" style="display: none;">
+            <div class="dialog-content">
+                <h3 id="dialog-title"></h3>
+                <p id="dialog-message"></p>
+                <div id="dialog-custom-content" class="dialog-instructions" style="display: none;"></div>
+                <div class="dialog-buttons">
+                    <button class="dock-button" id="dialog-cancel" onclick="window.dialogModule?.handleCancel()">
+                        <span>Cancel</span>
+                    </button>
+                    <button class="dock-button primary" id="dialog-confirm" onclick="window.dialogModule?.handleConfirm()">
+                        <span>OK</span>
+                    </button>
                 </div>
             </div>
         </div>

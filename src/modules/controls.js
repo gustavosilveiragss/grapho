@@ -1,11 +1,14 @@
 import { state } from './state.js';
 import { i18n } from './i18n.js';
+import { dialogModule } from './dialog.js';
+import { persistenceModule } from './persistence.js';
 
 class ControlsModule {
     setup() {
         this.setupTextInput();
         this.setupNumberInputs();
         this.setupColorPickers();
+        window.addEventListener('penDetected', () => this.showPressureUI());
     }
 
     setupTextInput() {
@@ -18,6 +21,7 @@ class ControlsModule {
                 state.painting.charIndex = 0;
             }
             state.tool.text = newText;
+            persistenceModule.scheduleSave();
         });
     }
 
@@ -27,6 +31,8 @@ class ControlsModule {
             { id: 'spacing', update: (val) => { state.tool.spacing = parseFloat(val) || 1.0; } },
             { id: 'stroke-weight', update: (val) => { state.tool.strokeWeight = parseFloat(val) || 0; } },
             { id: 'eraser-radius', update: (val) => { state.tool.eraserRadius = parseInt(val) || 20; } },
+            { id: 'pressure-min', update: (val) => { state.pressure.minMultiplier = parseFloat(val) || 0.5; } },
+            { id: 'pressure-max', update: (val) => { state.pressure.maxMultiplier = parseFloat(val) || 2.0; } },
         ];
 
         inputs.forEach(({ id, update }) => {
@@ -35,6 +41,7 @@ class ControlsModule {
 
             el.addEventListener('input', (e) => {
                 update(e.target.value);
+                persistenceModule.scheduleSave();
             });
         });
     }
@@ -62,6 +69,8 @@ class ControlsModule {
                 lucide.createIcons({ nodes: [icon] });
             }
         }
+
+        persistenceModule.scheduleSave();
     }
 
     toggleEraser() {
@@ -85,6 +94,47 @@ class ControlsModule {
         }
 
         window.redraw();
+        persistenceModule.scheduleSave();
+    }
+
+    showPressureUI() {
+        const controls = document.getElementById('pressure-controls');
+        if (controls) {
+            controls.style.display = 'flex';
+        }
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        i18n.updateDOM();
+    }
+
+    showPressureDialog() {
+        const contentHtml = `
+            <strong data-i18n="pressure.firefoxTitle"></strong>
+            <ol>
+                <li data-i18n="pressure.step1"></li>
+                <li data-i18n="pressure.step2"></li>
+                <li data-i18n="pressure.step3"></li>
+                <li data-i18n="pressure.step4"></li>
+            </ol>
+        `;
+        dialogModule.alert('pressure.title', 'pressure.message', contentHtml);
+    }
+
+    togglePressure() {
+        const hasSeenDialog = localStorage.getItem('ascii-paint-pressure-dialog-seen');
+        if (!hasSeenDialog) {
+            localStorage.setItem('ascii-paint-pressure-dialog-seen', 'true');
+            this.showPressureDialog();
+        }
+
+        state.pressure.enabled = !state.pressure.enabled;
+        const btn = document.getElementById('pressure-btn');
+        if (btn) {
+            btn.classList.toggle('active', state.pressure.enabled);
+        }
+
+        persistenceModule.scheduleSave();
     }
 }
 

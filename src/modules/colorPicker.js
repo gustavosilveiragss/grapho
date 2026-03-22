@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { i18n } from './i18n.js';
 import { layersModule } from './layers.js';
+import { persistenceModule } from './persistence.js';
 
 const STORAGE_KEY = 'ascii-paint-color-history';
 
@@ -293,6 +294,7 @@ class ColorPickerModule {
 
         this.addToHistory(color);
         this.updateToolbarSwatches();
+        persistenceModule.scheduleSave();
     }
 
     updateToolbarSwatches() {

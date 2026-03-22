@@ -135,6 +135,7 @@ class FontsModule {
         document.fonts.ready.then(() => {
             state.tool.fontFamily = family;
             this.loadedFonts.add(family);
+            window.persistenceModule?.scheduleSave();
         });
     }
 

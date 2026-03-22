@@ -1,13 +1,17 @@
 import { state } from './state.js';
 import { i18n } from './i18n.js';
+import { dialogModule } from './dialog.js';
 
 class LayersModule {
     constructor() {
         this.p = null;
     }
 
-    setup(p) {
+    setup(p, skipInit = false) {
         this.p = p;
+        if (!skipInit) {
+            this.initializeLayers(p);
+        }
         this.setupEventListeners();
         this.updateDock();
     }
@@ -26,6 +30,7 @@ class LayersModule {
             name: `${i18n.t('layers.layer')} ${state.layers.items.length}`,
             buffer,
             visible: true,
+            opacity: 1.0,
         };
 
         return layer;
@@ -52,13 +57,14 @@ class LayersModule {
 
         this.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
-    removeLayer(index) {
+    async removeLayer(index) {
         if (index === 0) return;
         if (index < 0 || index >= state.layers.items.length) return;
 
-        const confirmed = window.confirm(i18n.t('layers.confirmDelete'));
+        const confirmed = await dialogModule.confirm('layers.deleteTitle', 'layers.confirmDelete');
         if (!confirmed) return;
 
         const layer = state.layers.items[index];
@@ -76,6 +82,7 @@ class LayersModule {
 
         this.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     setActive(index) {
@@ -83,6 +90,7 @@ class LayersModule {
 
         state.layers.activeIndex = index;
         this.updateDock();
+        window.persistenceModule?.scheduleSave();
     }
 
     toggleVisibility(index) {
@@ -91,6 +99,7 @@ class LayersModule {
         state.layers.items[index].visible = !state.layers.items[index].visible;
         this.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     moveUp(index) {
@@ -108,6 +117,7 @@ class LayersModule {
 
         this.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     moveDown(index) {
@@ -125,6 +135,7 @@ class LayersModule {
 
         this.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     getActiveBuffer() {
@@ -132,11 +143,35 @@ class LayersModule {
         return layer?.buffer || null;
     }
 
+    setOpacity(index, opacity) {
+        if (index < 0 || index >= state.layers.items.length) return;
+
+        state.layers.items[index].opacity = Math.max(0, Math.min(1, opacity));
+        this.updateOpacitySlider();
+        window.redraw();
+        window.persistenceModule?.scheduleSave();
+    }
+
+    updateOpacitySlider() {
+        const opacitySlider = document.getElementById('layer-opacity');
+        const opacityValue = document.getElementById('layer-opacity-value');
+        const activeLayer = state.layers.items[state.layers.activeIndex];
+
+        if (opacitySlider && activeLayer) {
+            const percent = Math.round((activeLayer.opacity ?? 1.0) * 100);
+            opacitySlider.value = percent;
+            if (opacityValue) {
+                opacityValue.textContent = `${percent}%`;
+            }
+        }
+    }
+
     collapseDock() {
         const dock = document.getElementById('layer-dock');
         if (dock) {
             dock.classList.add('hidden');
         }
+        window.persistenceModule?.scheduleSave();
     }
 
     expandDock() {
@@ -147,6 +182,7 @@ class LayersModule {
                 lucide.createIcons({ nodes: [dock] });
             }
         }
+        window.persistenceModule?.scheduleSave();
     }
 
     toggleDock() {
@@ -180,6 +216,17 @@ class LayersModule {
 
         const toggleBtn = document.getElementById('layer-dock-toggle');
         toggleBtn?.addEventListener('click', () => this.toggleDock());
+
+        const opacitySlider = document.getElementById('layer-opacity');
+        const opacityValue = document.getElementById('layer-opacity-value');
+
+        opacitySlider?.addEventListener('input', (e) => {
+            const opacity = parseInt(e.target.value) / 100;
+            this.setOpacity(state.layers.activeIndex, opacity);
+            if (opacityValue) {
+                opacityValue.textContent = `${e.target.value}%`;
+            }
+        });
     }
 
     updateDock() {
@@ -231,6 +278,7 @@ class LayersModule {
         }
 
         this.updateButtons();
+        this.updateOpacitySlider();
 
         if (typeof lucide !== 'undefined') {
             lucide.createIcons({ nodes: [list] });

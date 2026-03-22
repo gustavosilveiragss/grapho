@@ -41,4 +41,10 @@ export const state = {
         colors: [],
         maxColors: 12,
     },
+    pressure: {
+        penDetected: false,
+        enabled: false,
+        minMultiplier: 0.5,
+        maxMultiplier: 2.0,
+    },
 };

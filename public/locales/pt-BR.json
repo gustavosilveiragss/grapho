@@ -16,7 +16,22 @@
         "clear": "Limpar",
         "save": "Salvar",
         "eraser": "Borracha",
-        "eraserRadius": "Raio"
+        "eraserRadius": "Raio",
+        "pressure": "Pressão"
+    },
+    "dialog": {
+        "ok": "OK",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+    },
+    "pressure": {
+        "title": "Pressão de Caneta",
+        "message": "A pressão da caneta pode não funcionar corretamente em alguns navegadores/sistemas. Se não funcionar, tente o Firefox com esta configuração:",
+        "firefoxTitle": "Configuração do Firefox (Windows):",
+        "step1": "1. Abra about:config na barra de endereços",
+        "step2": "2. Procure por: dom.w3c_pointer_events.dispatch_by_pointer_messages",
+        "step3": "3. Defina o valor como true",
+        "step4": "4. Reinicie o Firefox"
     },
     "colorDock": {
         "textColor": "Texto",
@@ -26,10 +41,14 @@
     "layers": {
         "title": "Camadas",
         "layer": "Camada",
-        "confirmDelete": "Excluir esta camada? Esta ação é irreversível."
+        "deleteTitle": "Excluir Camada",
+        "confirmDelete": "Tem certeza que deseja excluir esta camada? Esta ação é irreversível."
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",
         "pan": "Espaço + Arrastar: Mover"
+    },
+    "loading": {
+        "restoring": "Restaurando..."
     }
 }

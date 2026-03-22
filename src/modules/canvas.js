@@ -30,8 +30,6 @@ class CanvasModule {
         const canvas = p.createCanvas(w, h);
         canvas.parent('canvas-container');
 
-        layersModule.initializeLayers(p);
-
         p.noLoop();
 
         this.tx = (container.clientWidth - w) / 2;
@@ -184,6 +182,7 @@ class CanvasModule {
             canvas.style.transformOrigin = '0 0';
             canvas.style.transform = `translate(${this.tx}px, ${this.ty}px) scale(${state.canvas.zoom})`;
         }
+        window.persistenceModule?.scheduleSave();
     }
 
     handleResize() {

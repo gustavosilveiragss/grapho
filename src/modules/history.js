@@ -30,6 +30,7 @@ class HistoryModule {
                 name: layer.name,
                 image: layer.buffer.get(),
                 visible: layer.visible,
+                opacity: layer.opacity ?? 1.0,
             })),
             tool: { ...state.tool },
             bgColor: state.canvas.bgColor,
@@ -45,6 +46,7 @@ class HistoryModule {
                 layer.buffer.image(layerData.image, 0, 0);
                 layer.visible = layerData.visible;
                 layer.name = layerData.name;
+                layer.opacity = layerData.opacity ?? 1.0;
             }
         });
 
@@ -54,6 +56,7 @@ class HistoryModule {
         this.syncUI();
         layersModule.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     saveSnapshot() {
@@ -87,6 +90,7 @@ class HistoryModule {
         state.painting.charIndex = 0;
         layersModule.updateDock();
         window.redraw();
+        window.persistenceModule?.scheduleSave();
     }
 
     syncUI() {

@@ -16,7 +16,22 @@
         "clear": "Clear",
         "save": "Save",
         "eraser": "Eraser",
-        "eraserRadius": "Radius"
+        "eraserRadius": "Radius",
+        "pressure": "Pressure"
+    },
+    "dialog": {
+        "ok": "OK",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+    },
+    "pressure": {
+        "title": "Pen Pressure",
+        "message": "Pen pressure may not work correctly in some browsers/systems. If it doesn't work, try Firefox with this setting:",
+        "firefoxTitle": "Firefox configuration (Windows):",
+        "step1": "1. Open about:config in the address bar",
+        "step2": "2. Search for: dom.w3c_pointer_events.dispatch_by_pointer_messages",
+        "step3": "3. Set the value to true",
+        "step4": "4. Restart Firefox"
     },
     "colorDock": {
         "textColor": "Text",
@@ -26,10 +41,14 @@
     "layers": {
         "title": "Layers",
         "layer": "Layer",
-        "confirmDelete": "Delete this layer? This action cannot be undone."
+        "deleteTitle": "Delete Layer",
+        "confirmDelete": "Are you sure you want to delete this layer? This action cannot be undone."
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",
         "pan": "Space + Drag: Move"
+    },
+    "loading": {
+        "restoring": "Restoring..."
     }
 }

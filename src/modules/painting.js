@@ -3,6 +3,7 @@ import { mathUtils } from './mathUtils.js';
 import { drawingModule } from './drawing.js';
 import { historyModule } from './history.js';
 import { layersModule } from './layers.js';
+import { persistenceModule } from './persistence.js';
 
 const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
@@ -13,6 +14,7 @@ class PaintingModule {
         this.eraserPos = null;
         this.erasedThisStroke = false;
         this.savedSnapshotThisStroke = false;
+        this.currentPressure = 0.5;
     }
 
     setup() {
@@ -34,6 +36,12 @@ class PaintingModule {
     onPointerDown(e) {
         if (state.canvas.spaceHeld || state.canvas.pinching) return;
         if (e.target !== document.querySelector('#canvas-container canvas')) return;
+
+        if (e.pointerType === 'pen' && !state.pressure.penDetected) {
+            state.pressure.penDetected = true;
+            window.dispatchEvent(new CustomEvent('penDetected'));
+        }
+        this.currentPressure = e.pressure || 0.5;
 
         const { x, y } = this.getPos(e);
         state.painting.isActive = true;
@@ -69,9 +77,12 @@ class PaintingModule {
         if (!state.painting.isActive || state.canvas.pinching) return;
         e.preventDefault();
 
+        const pressure = e.pressure || 0.5;
+
         if (this.throttleFrame) return;
         this.throttleFrame = requestAnimationFrame(() => {
             this.throttleFrame = null;
+            this.currentPressure = pressure;
             const pos = this.getPos(e);
             this.continueStroke(pos.x, pos.y);
         });
@@ -90,6 +101,7 @@ class PaintingModule {
             this.erasedThisStroke = false;
             layersModule.refreshThumbnails();
             window.redraw();
+            persistenceModule.scheduleSave();
             return;
         }
 
@@ -97,6 +109,7 @@ class PaintingModule {
             state.liveChars = [];
             layersModule.refreshThumbnails();
             window.redraw();
+            persistenceModule.scheduleSave();
         }
     }
 
@@ -136,7 +149,8 @@ class PaintingModule {
 
         while (true) {
             const nextChar = text[painting.charIndex % text.length];
-            const maxCharWidth = drawingModule.measureCharWidth('M', tool.fontFamily, tool.fontSize);
+            const effectiveSize = this.calculatePressureSize(tool.fontSize);
+            const maxCharWidth = drawingModule.measureCharWidth('M', tool.fontFamily, effectiveSize);
             const stepSize = maxCharWidth * tool.spacing;
 
             const dist = mathUtils.distance(painting.lastPlacedPos, current);
@@ -168,7 +182,7 @@ class PaintingModule {
                 y: cy,
                 angle: finalAngle,
                 font: tool.fontFamily,
-                size: tool.fontSize,
+                size: this.calculatePressureSize(tool.fontSize),
                 color: tool.color,
                 strokeWeight: tool.strokeWeight,
             };
@@ -207,6 +221,15 @@ class PaintingModule {
 
         this.erasedThisStroke = true;
         window.redraw();
+    }
+
+    calculatePressureSize(baseSize) {
+        if (!state.pressure.enabled || !state.pressure.penDetected) {
+            return baseSize;
+        }
+        const { minMultiplier, maxMultiplier } = state.pressure;
+        const multiplier = minMultiplier + this.currentPressure * (maxMultiplier - minMultiplier);
+        return Math.round(baseSize * multiplier);
     }
 }
 
