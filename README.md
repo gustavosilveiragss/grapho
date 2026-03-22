@@ -8,7 +8,7 @@ Paint text along freehand paths on a canvas. Characters follow the direction of 
 
 ![General UI screenshot](public/docs/layers_update.png)
 
-![text painting demo](public/docs/painting.png)
+![text painting demo](public/docs/bmo.png)
 
 ## Installation
 
