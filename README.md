@@ -6,7 +6,7 @@
 
 Paint text along freehand paths on a canvas. Characters follow the direction of the stroke and repeat seamlessly. Full undo/redo, zoom & pan, export as PNG.
 
-![General UI screenshot](public/docs/general.png)
+![General UI screenshot](public/docs/layers_update.png)
 
 ![text painting demo](public/docs/painting.png)
 
