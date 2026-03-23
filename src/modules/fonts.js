@@ -37,7 +37,7 @@ const FALLBACK_FONTS = [
     'Bodoni Moda', 'DM Serif Display', 'Yeseva One', 'Pridi', 'Philosopher',
     'Rokkitt', 'Taviraj', 'Trirong', 'Arvo', 'Crete Round', 'Faustina',
     'Gelasio', 'Literata', 'Newsreader', 'Podkova', 'Roboto Slab',
-    'Comic Neue', 'Gochi Hand', 'Handlee', 'Mali', 'Neucha', 'Reenie Beanie',
+    'Gochi Hand', 'Handlee', 'Mali', 'Neucha', 'Reenie Beanie',
     'Rock Salt', 'Sue Ellen Francisco', 'Architects Daughter', 'Covered By Your Grace',
     'Gloria Hallelujah', 'Just Another Hand', 'Schoolbell', 'Coming Soon',
     'Pangolin', 'Sriracha', 'Itim', 'Charm', 'Sedgwick Ave Display',

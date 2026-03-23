@@ -2,21 +2,20 @@ import { state } from './state.js';
 import { i18n } from './i18n.js';
 import { dialogModule } from './dialog.js';
 import { persistenceModule } from './persistence.js';
-
-function getGraphemeClusters(text) {
-    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
-        const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
-        return [...segmenter.segment(text)].map(s => s.segment);
-    }
-    return Array.from(text);
-}
+import { getGraphemeClusters } from './painting.js';
 
 class ControlsModule {
     setup() {
         this.setupTextInput();
-        this.setupColorPickers();
         this.setupToolbarCollapse();
+        this.setupButtons();
         window.addEventListener('penDetected', () => this.showPressureUI());
+    }
+
+    setupButtons() {
+        document.getElementById('continue-btn')?.addEventListener('click', () => this.toggleContinue());
+        document.getElementById('eraser-btn')?.addEventListener('click', () => this.toggleEraser());
+        document.getElementById('pressure-btn')?.addEventListener('click', () => this.togglePressure());
     }
 
     setupToolbarCollapse() {
@@ -56,11 +55,7 @@ class ControlsModule {
         });
     }
 
-    setupColorPickers() {
-    }
-
-    toggleContinue() {
-        state.tool.continueFromLast = !state.tool.continueFromLast;
+    syncContinueButton() {
         const btn = document.getElementById('continue-btn');
         if (!btn) return;
 
@@ -79,7 +74,11 @@ class ControlsModule {
                 lucide.createIcons({ nodes: [icon] });
             }
         }
+    }
 
+    toggleContinue() {
+        state.tool.continueFromLast = !state.tool.continueFromLast;
+        this.syncContinueButton();
         persistenceModule.scheduleSave();
     }
 
@@ -111,9 +110,9 @@ class ControlsModule {
         const controls = document.getElementById('pressure-controls');
         if (controls) {
             controls.style.display = 'flex';
-        }
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons({ nodes: controls.querySelectorAll('[data-lucide]') });
+            }
         }
         i18n.updateDOM();
     }

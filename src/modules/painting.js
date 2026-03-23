@@ -9,7 +9,7 @@ import { canvasModule } from './canvas.js';
 const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
 
-function getGraphemeClusters(text) {
+export function getGraphemeClusters(text) {
     if (typeof Intl !== 'undefined' && Intl.Segmenter) {
         const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
         return [...segmenter.segment(text)].map(s => s.segment);
@@ -108,7 +108,7 @@ class PaintingModule {
 
         if (state.tool.mode === 'eraser') {
             this.erasedThisStroke = false;
-            layersModule.refreshThumbnails();
+            layersModule.updateDock();
             window.redraw();
             persistenceModule.scheduleSave();
             return;
@@ -116,7 +116,7 @@ class PaintingModule {
 
         if (state.liveChars.length > 0) {
             state.liveChars = [];
-            layersModule.refreshThumbnails();
+            layersModule.updateDock();
             window.redraw();
             persistenceModule.scheduleSave();
         }

@@ -1,5 +1,4 @@
 import { state } from './state.js';
-import { i18n } from './i18n.js';
 import { layersModule } from './layers.js';
 
 const MAX_SNAPSHOTS = 20;
@@ -21,6 +20,9 @@ class HistoryModule {
                 }
             }
         });
+
+        document.getElementById('undo-btn')?.addEventListener('click', () => this.undo());
+        document.getElementById('clear-btn')?.addEventListener('click', () => this.clear());
     }
 
     captureState() {
@@ -94,46 +96,7 @@ class HistoryModule {
     }
 
     syncUI() {
-        const el = (id) => document.getElementById(id);
-
-        const paintText = el('paint-text');
-        if (paintText) paintText.value = state.tool.text;
-
-        const colorPicker = el('color-picker');
-        if (colorPicker) colorPicker.value = state.tool.color;
-
-        const bgPicker = el('bg-color-picker');
-        if (bgPicker) bgPicker.value = state.canvas.bgColor;
-
-        const fontSize = el('font-size');
-        if (fontSize) fontSize.value = state.tool.fontSize;
-
-        const spacing = el('spacing');
-        if (spacing) spacing.value = state.tool.spacing;
-
-        const strokeWeight = el('stroke-weight');
-        if (strokeWeight) strokeWeight.value = state.tool.strokeWeight;
-
-        const fontSearch = el('font-search');
-        if (fontSearch) fontSearch.value = state.tool.fontFamily;
-
-        const continueBtn = el('continue-btn');
-        if (continueBtn) {
-            continueBtn.classList.toggle('active', state.tool.continueFromLast);
-            const span = continueBtn.querySelector('[data-i18n]');
-            if (span) {
-                const key = state.tool.continueFromLast ? 'toolbar.continue' : 'toolbar.restart';
-                span.setAttribute('data-i18n', key);
-                span.textContent = i18n.t(key);
-            }
-            if (typeof lucide !== 'undefined') {
-                const icon = continueBtn.querySelector('[data-lucide]');
-                if (icon) {
-                    icon.setAttribute('data-lucide', state.tool.continueFromLast ? 'repeat' : 'rotate-ccw');
-                    lucide.createIcons({ nodes: [icon] });
-                }
-            }
-        }
+        window.persistenceModule?.syncUI();
     }
 }
 

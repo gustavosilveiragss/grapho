@@ -1,8 +1,7 @@
 import { state } from './state.js';
-import { canvasModule } from './canvas.js';
+import { canvasModule, getPixelDensity } from './canvas.js';
 import { layersModule } from './layers.js';
 import { colorPickerModule } from './colorPicker.js';
-import { i18n } from './i18n.js';
 
 const STORAGE_KEY = 'grapho-state';
 const VERSION = 1;
@@ -34,7 +33,7 @@ class PersistenceModule {
         return new Promise((resolve) => {
             const img = new Image();
             img.onload = () => {
-                const currentDensity = Math.min(5, Math.max(3, window.devicePixelRatio));
+                const currentDensity = getPixelDensity();
                 const buffer = this.p.createGraphics(width, height);
                 buffer.pixelDensity(currentDensity);
 
@@ -54,7 +53,7 @@ class PersistenceModule {
     }
 
     captureState() {
-        const density = Math.min(5, Math.max(3, window.devicePixelRatio));
+        const density = getPixelDensity();
         return {
             version: VERSION,
             canvas: {
@@ -233,39 +232,7 @@ class PersistenceModule {
         const fontSearch = document.getElementById('font-search');
         if (fontSearch) fontSearch.value = state.tool.fontFamily;
 
-        const fontSize = document.getElementById('font-size');
-        if (fontSize) fontSize.value = state.tool.fontSize;
-
-        const spacing = document.getElementById('spacing');
-        if (spacing) spacing.value = state.tool.spacing;
-
-        const strokeWeight = document.getElementById('stroke-weight');
-        if (strokeWeight) strokeWeight.value = state.tool.strokeWeight;
-
-        const eraserRadius = document.getElementById('eraser-radius');
-        if (eraserRadius) eraserRadius.value = state.tool.eraserRadius;
-
-        const pressureMin = document.getElementById('pressure-min');
-        if (pressureMin) pressureMin.value = state.pressure.minMultiplier;
-
-        const pressureMax = document.getElementById('pressure-max');
-        if (pressureMax) pressureMax.value = state.pressure.maxMultiplier;
-
-        const continueBtn = document.getElementById('continue-btn');
-        if (continueBtn) {
-            continueBtn.classList.toggle('active', state.tool.continueFromLast);
-            const span = continueBtn.querySelector('[data-i18n]');
-            if (span) {
-                const key = state.tool.continueFromLast ? 'toolbar.continue' : 'toolbar.restart';
-                span.setAttribute('data-i18n', key);
-                span.textContent = i18n.t(key);
-            }
-            const icon = continueBtn.querySelector('[data-lucide]');
-            if (icon && typeof lucide !== 'undefined') {
-                icon.setAttribute('data-lucide', state.tool.continueFromLast ? 'repeat' : 'rotate-ccw');
-                lucide.createIcons({ nodes: [icon] });
-            }
-        }
+        window.controlsModule?.syncContinueButton();
 
         const eraserBtn = document.getElementById('eraser-btn');
         const eraserOptions = document.getElementById('eraser-options');
@@ -278,6 +245,8 @@ class PersistenceModule {
 
         const pressureBtn = document.getElementById('pressure-btn');
         if (pressureBtn) pressureBtn.classList.toggle('active', state.pressure.enabled);
+
+        window.sliderInputModule?.syncFromState();
 
         colorPickerModule.updateToolbarSwatches();
 

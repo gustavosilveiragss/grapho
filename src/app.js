@@ -40,17 +40,11 @@ async function initializeApp() {
         layersModule,
         dialogModule,
         persistenceModule,
+        sliderInputModule,
         i18nModule: i18n,
         colorPickerModule,
         symbolPickerModule,
     });
-
-    const showLoading = (show) => {
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) {
-            overlay.style.display = show ? 'flex' : 'none';
-        }
-    };
 
     const sketch = (p) => {
         p.setup = async () => {
@@ -58,23 +52,10 @@ async function initializeApp() {
             persistenceModule.setup(p);
 
             const savedData = persistenceModule.load();
-            // TODO: fix layer restore pixelDensity scaling
-            // const hasValidSave = savedData?.layers?.items?.length > 0;
-            // if (hasValidSave) {
-            //     showLoading(true);
-            //     i18n.updateDOM();
-            //     await persistenceModule.restoreState(savedData);
-            //     layersModule.setup(p, true);
-            // } else {
-            //     layersModule.setup(p);
-            // }
             layersModule.setup(p);
             if (savedData) {
                 persistenceModule.restoreSettingsOnly(savedData);
             }
-            // if (hasValidSave) {
-            //     showLoading(false);
-            // }
 
             controlsModule.setup();
             sliderInputModule.setup();
@@ -83,6 +64,7 @@ async function initializeApp() {
             exportModule.setup(p);
             colorPickerModule.setup();
             symbolPickerModule.setup();
+            dialogModule.setup();
             mobileDrawerModule.setup();
 
             setTimeout(() => paintingModule.setup(), 50);

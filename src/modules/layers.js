@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { i18n } from './i18n.js';
 import { dialogModule } from './dialog.js';
+import { getPixelDensity } from './canvas.js';
 
 class LayersModule {
     constructor() {
@@ -34,11 +35,15 @@ class LayersModule {
         }
     }
 
+    isValidIndex(index) {
+        return index >= 0 && index < state.layers.items.length;
+    }
+
     createLayer() {
         if (!this.p) return null;
 
         const { width, height } = state.canvas;
-        const density = Math.min(5, Math.max(3, window.devicePixelRatio));
+        const density = getPixelDensity();
 
         const buffer = this.p.createGraphics(width, height);
         buffer.pixelDensity(density);
@@ -79,8 +84,7 @@ class LayersModule {
     }
 
     async removeLayer(index) {
-        if (index === 0) return;
-        if (index < 0 || index >= state.layers.items.length) return;
+        if (index === 0 || !this.isValidIndex(index)) return;
 
         const confirmed = await dialogModule.confirm('layers.deleteTitle', 'layers.confirmDelete');
         if (!confirmed) return;
@@ -104,7 +108,7 @@ class LayersModule {
     }
 
     setActive(index) {
-        if (index < 0 || index >= state.layers.items.length) return;
+        if (!this.isValidIndex(index)) return;
 
         state.layers.activeIndex = index;
         this.updateDock();
@@ -112,7 +116,7 @@ class LayersModule {
     }
 
     toggleVisibility(index) {
-        if (index < 0 || index >= state.layers.items.length) return;
+        if (!this.isValidIndex(index)) return;
 
         state.layers.items[index].visible = !state.layers.items[index].visible;
         this.updateDock();
@@ -121,7 +125,7 @@ class LayersModule {
     }
 
     moveUp(index) {
-        if (index < 0 || index >= state.layers.items.length - 1) return;
+        if (!this.isValidIndex(index) || index >= state.layers.items.length - 1) return;
 
         const temp = state.layers.items[index];
         state.layers.items[index] = state.layers.items[index + 1];
@@ -139,7 +143,7 @@ class LayersModule {
     }
 
     moveDown(index) {
-        if (index <= 0 || index >= state.layers.items.length) return;
+        if (index <= 0 || !this.isValidIndex(index)) return;
 
         const temp = state.layers.items[index];
         state.layers.items[index] = state.layers.items[index - 1];
@@ -162,7 +166,7 @@ class LayersModule {
     }
 
     setOpacity(index, opacity) {
-        if (index < 0 || index >= state.layers.items.length) return;
+        if (!this.isValidIndex(index)) return;
 
         state.layers.items[index].opacity = Math.max(0, Math.min(1, opacity));
         this.updateOpacitySlider();
@@ -225,10 +229,6 @@ class LayersModule {
     isCollapsed() {
         const dock = document.getElementById('layer-dock');
         return dock?.classList.contains('hidden') ?? false;
-    }
-
-    isMobile() {
-        return window.innerWidth <= 768;
     }
 
     setupEventListeners() {
@@ -365,9 +365,6 @@ class LayersModule {
         container.appendChild(canvas);
     }
 
-    refreshThumbnails() {
-        this.updateDock();
-    }
 }
 
 export const layersModule = new LayersModule();

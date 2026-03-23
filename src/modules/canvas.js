@@ -1,6 +1,17 @@
 import { state } from './state.js';
 import { layersModule } from './layers.js';
 
+const RAD_TO_DEG = 180 / Math.PI;
+const ROTATION_STEP = 0.05;
+const ZOOM_IN_FACTOR = 1.1;
+const ZOOM_OUT_FACTOR = 0.9;
+const MIN_ZOOM = 0.1;
+const MAX_ZOOM = 5;
+
+export function getPixelDensity() {
+    return Math.min(5, Math.max(3, window.devicePixelRatio));
+}
+
 class CanvasModule {
     constructor() {
         this.pinchStartDist = 0;
@@ -19,11 +30,11 @@ class CanvasModule {
 
     setup(p) {
         this.p = p;
+        this.container = document.getElementById('canvas-container');
 
-        const container = document.getElementById('canvas-container');
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        const density = Math.min(5, Math.max(3, window.devicePixelRatio));
+        const w = this.container.clientWidth;
+        const h = this.container.clientHeight;
+        const density = getPixelDensity();
 
         state.canvas.width = w;
         state.canvas.height = h;
@@ -34,8 +45,8 @@ class CanvasModule {
 
         p.noLoop();
 
-        this.tx = (container.clientWidth - w) / 2;
-        this.ty = (container.clientHeight - h) / 2;
+        this.tx = (this.container.clientWidth - w) / 2;
+        this.ty = (this.container.clientHeight - h) / 2;
 
         this.setupZoom();
         this.setupPan();
@@ -44,14 +55,12 @@ class CanvasModule {
     }
 
     setupZoom() {
-        const container = document.getElementById('canvas-container');
-
-        container.addEventListener('wheel', (e) => {
+        this.container.addEventListener('wheel', (e) => {
             if (e.altKey) {
                 e.preventDefault();
-                const step = e.deltaY > 0 ? 0.05 : -0.05;
+                const step = e.deltaY > 0 ? ROTATION_STEP : -ROTATION_STEP;
 
-                const rect = container.getBoundingClientRect();
+                const rect = this.container.getBoundingClientRect();
                 const cx = rect.width / 2;
                 const cy = rect.height / 2;
                 const canvasPoint = this.screenToCanvas(cx, cy);
@@ -71,14 +80,14 @@ class CanvasModule {
             if (!e.ctrlKey && !e.metaKey) return;
             e.preventDefault();
 
-            const rect = container.getBoundingClientRect();
+            const rect = this.container.getBoundingClientRect();
             const cursorX = e.clientX - rect.left;
             const cursorY = e.clientY - rect.top;
 
             const canvasPoint = this.screenToCanvas(cursorX, cursorY);
 
-            const factor = e.deltaY > 0 ? 0.9 : 1.1;
-            const newZoom = Math.min(5, Math.max(0.1, state.canvas.zoom * factor));
+            const factor = e.deltaY > 0 ? ZOOM_OUT_FACTOR : ZOOM_IN_FACTOR;
+            const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, state.canvas.zoom * factor));
             state.canvas.zoom = newZoom;
 
             const cos = Math.cos(state.canvas.rotation);
@@ -89,7 +98,7 @@ class CanvasModule {
             this.applyTransform();
         }, { passive: false });
 
-        container.addEventListener('touchstart', (e) => {
+        this.container.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
                 state.canvas.pinching = true;
@@ -104,18 +113,18 @@ class CanvasModule {
             }
         }, { passive: false });
 
-        container.addEventListener('touchend', (e) => {
+        this.container.addEventListener('touchend', (e) => {
             if (e.touches.length < 2) {
                 state.canvas.pinching = false;
             }
         });
 
-        container.addEventListener('touchmove', (e) => {
+        this.container.addEventListener('touchmove', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
                 const dist = this.touchDist(e.touches);
                 const mid = this.touchMid(e.touches);
-                const rect = container.getBoundingClientRect();
+                const rect = this.container.getBoundingClientRect();
 
                 const midX = mid.x - rect.left;
                 const midY = mid.y - rect.top;
@@ -124,7 +133,7 @@ class CanvasModule {
 
                 const angleDelta = this.touchAngle(e.touches) - this.pinchStartAngle;
                 const newRotation = this.pinchStartRotation + angleDelta;
-                const newZoom = Math.min(5, Math.max(0.1, this.pinchStartZoom * (dist / this.pinchStartDist)));
+                const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, this.pinchStartZoom * (dist / this.pinchStartDist)));
 
                 const cosStart = Math.cos(-this.pinchStartRotation);
                 const sinStart = Math.sin(-this.pinchStartRotation);
@@ -147,13 +156,11 @@ class CanvasModule {
     }
 
     setupPan() {
-        const container = document.getElementById('canvas-container');
-
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && !e.repeat && !this.isInputFocused()) {
                 e.preventDefault();
                 state.canvas.spaceHeld = true;
-                container.style.cursor = 'grab';
+                this.container.style.cursor = 'grab';
             }
         });
 
@@ -161,22 +168,22 @@ class CanvasModule {
             if (e.code === 'Space') {
                 state.canvas.spaceHeld = false;
                 this.isPanning = false;
-                container.style.cursor = 'crosshair';
+                this.container.style.cursor = 'crosshair';
             }
         });
 
-        container.addEventListener('pointerdown', (e) => {
+        this.container.addEventListener('pointerdown', (e) => {
             if (!state.canvas.spaceHeld) return;
             e.preventDefault();
             e.stopPropagation();
             this.isPanning = true;
             this.panLastX = e.clientX;
             this.panLastY = e.clientY;
-            container.style.cursor = 'grabbing';
-            container.setPointerCapture(e.pointerId);
+            this.container.style.cursor = 'grabbing';
+            this.container.setPointerCapture(e.pointerId);
         }, true);
 
-        container.addEventListener('pointermove', (e) => {
+        this.container.addEventListener('pointermove', (e) => {
             if (!this.isPanning) return;
             e.preventDefault();
             e.stopPropagation();
@@ -187,10 +194,10 @@ class CanvasModule {
             this.applyTransform();
         }, true);
 
-        container.addEventListener('pointerup', (e) => {
+        this.container.addEventListener('pointerup', (e) => {
             if (!this.isPanning) return;
             this.isPanning = false;
-            container.style.cursor = state.canvas.spaceHeld ? 'grab' : 'crosshair';
+            this.container.style.cursor = state.canvas.spaceHeld ? 'grab' : 'crosshair';
         }, true);
     }
 
@@ -261,7 +268,7 @@ class CanvasModule {
     applyTransform() {
         const canvas = document.querySelector('#canvas-container canvas');
         if (canvas) {
-            const deg = state.canvas.rotation * (180 / Math.PI);
+            const deg = state.canvas.rotation * RAD_TO_DEG;
             canvas.style.transformOrigin = '0 0';
             canvas.style.transform = `translate(${this.tx}px, ${this.ty}px) rotate(${deg}deg) scale(${state.canvas.zoom})`;
         }
@@ -272,7 +279,7 @@ class CanvasModule {
     updateRotationIndicator() {
         const el = document.getElementById('rotation-value');
         if (!el) return;
-        let deg = (state.canvas.rotation * (180 / Math.PI)) % 360;
+        let deg = (state.canvas.rotation * RAD_TO_DEG) % 360;
         if (deg > 180) deg -= 360;
         if (deg < -180) deg += 360;
         el.textContent = `${Math.round(deg * 10) / 10}°`;

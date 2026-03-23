@@ -1,16 +1,11 @@
 const PI = Math.PI;
 const TWO_PI = PI * 2;
-const HALF_PI = PI / 2;
 
 class MathUtils {
     distance(p1, p2) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
         return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    lerp(a, b, t) {
-        return a + (b - a) * t;
     }
 
     angleFromLastSegments(pathPoints, count) {
@@ -22,15 +17,6 @@ class MathUtils {
         const p2 = pathPoints[len - 1];
 
         return Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    }
-
-    makeReadable(angle) {
-        angle = ((angle % TWO_PI) + TWO_PI) % TWO_PI;
-        if (angle > PI) angle -= TWO_PI;
-
-        if (angle > HALF_PI) return angle - PI;
-        if (angle < -HALF_PI) return angle + PI;
-        return angle;
     }
 
     lerpAngle(a, b, t) {

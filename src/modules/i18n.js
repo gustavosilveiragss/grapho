@@ -9,6 +9,16 @@ class I18n {
     async init() {
         await this.loadLocale(this.currentLocale);
         this.updateDOM();
+        this.setupLangButtons();
+    }
+
+    setupLangButtons() {
+        document.querySelectorAll('.flag-button[data-locale]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const locale = btn.getAttribute('data-locale');
+                if (locale) this.switchLanguage(locale);
+            });
+        });
     }
 
     async switchLanguage(locale) {

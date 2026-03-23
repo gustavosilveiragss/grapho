@@ -99,7 +99,7 @@ class MobileDrawerModule {
     updateFabSwatch() {
         const fabSwatch = document.getElementById('fab-color-swatch');
         if (fabSwatch) {
-            fabSwatch.style.background = state.color?.text || '#ffffff';
+            fabSwatch.style.background = state.tool.color || '#ffffff';
         }
     }
 
@@ -139,8 +139,8 @@ class MobileDrawerModule {
         this.isOpen = true;
         document.body.style.overflow = 'hidden';
 
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        if (typeof lucide !== 'undefined' && this.contentEl) {
+            lucide.createIcons({ nodes: this.contentEl.querySelectorAll('[data-lucide]') });
         }
     }
 
@@ -155,23 +155,27 @@ class MobileDrawerModule {
     }
 
     rebindColorEvents(container) {
+        if (window.colorPickerModule) {
+            window.colorPickerModule.activeType = 'text';
+        }
+
         const picker = container.querySelector('input[type="color"]');
         const eyedropper = container.querySelector('.eyedropper-btn');
         const colorInput = container.querySelector('input[type="text"]');
         const swatches = container.querySelectorAll('.history-swatch');
 
         picker?.addEventListener('input', (e) => {
-            window.colorPickerModule?.setActiveColor(e.target.value);
+            window.colorPickerModule?.applyColor(e.target.value);
             this.updateFabSwatch();
         });
 
         eyedropper?.addEventListener('click', () => {
-            window.colorPickerModule?.startEyedropper();
+            window.colorPickerModule?.activateEyedropper();
             this.close();
         });
 
         colorInput?.addEventListener('change', (e) => {
-            window.colorPickerModule?.setActiveColor(e.target.value);
+            window.colorPickerModule?.applyColor(e.target.value);
             this.updateFabSwatch();
         });
 
@@ -179,7 +183,7 @@ class MobileDrawerModule {
             swatch.addEventListener('click', () => {
                 const color = swatch.dataset.color;
                 if (color) {
-                    window.colorPickerModule?.setActiveColor(color);
+                    window.colorPickerModule?.applyColor(color);
                     this.updateFabSwatch();
                 }
             });
@@ -187,17 +191,8 @@ class MobileDrawerModule {
     }
 
     rebindSymbolEvents(container) {
-        const tabs = container.querySelectorAll('.symbol-dock-tab');
         const search = container.querySelector('#symbol-search, input[type="text"]');
         const cells = container.querySelectorAll('.item-cell');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabType = tab.dataset.tab;
-                window.symbolPickerModule?.switchTab(tabType);
-                this.refreshDrawerContent('symbol');
-            });
-        });
 
         search?.addEventListener('input', (e) => {
             window.symbolPickerModule?.search(e.target.value);
@@ -206,8 +201,8 @@ class MobileDrawerModule {
 
         cells.forEach(cell => {
             cell.addEventListener('click', () => {
-                const symbol = cell.dataset.symbol || cell.textContent;
-                window.symbolPickerModule?.selectSymbol(symbol);
+                const symbol = cell.dataset.char || cell.textContent;
+                window.symbolPickerModule?.selectItem(symbol);
             });
         });
     }
@@ -226,17 +221,17 @@ class MobileDrawerModule {
         });
 
         removeBtn?.addEventListener('click', () => {
-            window.layersModule?.removeActiveLayer();
+            window.layersModule?.removeLayer(state.layers.activeIndex);
             this.refreshDrawerContent('layer');
         });
 
         upBtn?.addEventListener('click', () => {
-            window.layersModule?.moveLayerUp();
+            window.layersModule?.moveUp(state.layers.activeIndex);
             this.refreshDrawerContent('layer');
         });
 
         downBtn?.addEventListener('click', () => {
-            window.layersModule?.moveLayerDown();
+            window.layersModule?.moveDown(state.layers.activeIndex);
             this.refreshDrawerContent('layer');
         });
 
@@ -265,8 +260,8 @@ class MobileDrawerModule {
                 this.contentEl.appendChild(clone);
                 this.rebindEvents(dockType, clone);
 
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
+                if (typeof lucide !== 'undefined' && this.contentEl) {
+                    lucide.createIcons({ nodes: this.contentEl.querySelectorAll('[data-lucide]') });
                 }
             }
         }, 50);

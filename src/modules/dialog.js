@@ -5,6 +5,11 @@ class DialogModule {
         this.resolveCallback = null;
     }
 
+    setup() {
+        document.getElementById('dialog-confirm')?.addEventListener('click', () => this.handleConfirm());
+        document.getElementById('dialog-cancel')?.addEventListener('click', () => this.handleCancel());
+    }
+
     show({ titleKey, messageKey, contentHtml = null, confirmKey = 'dialog.ok', cancelKey = null }) {
         return new Promise((resolve) => {
             this.resolveCallback = resolve;

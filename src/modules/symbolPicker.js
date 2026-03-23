@@ -10,8 +10,6 @@ const STORAGE_KEY = 'grapho-symbol-history';
 class SymbolPickerModule {
     constructor() {
         this.activeTab = 'symbols';
-        this.activeSymbolCategory = 'geometric';
-        this.activeEmojiGroup = 'smileys';
         this.searchIndex = null;
         this.intersectionObserver = null;
         this.debounceTimer = null;
@@ -148,11 +146,9 @@ class SymbolPickerModule {
         const dock = document.getElementById('symbol-dock');
         if (!dock) return;
 
+        window.colorPickerModule?.closeDock();
         if (window.innerWidth <= 768) {
             layersModule.collapseDock();
-            window.colorPickerModule?.closeDock();
-        } else {
-            window.colorPickerModule?.closeDock();
         }
 
         dock.classList.remove('hidden');
@@ -367,9 +363,6 @@ class SymbolPickerModule {
         ).join('');
     }
 
-    syncUI() {
-        this.renderHistory();
-    }
 }
 
 export const symbolPickerModule = new SymbolPickerModule();

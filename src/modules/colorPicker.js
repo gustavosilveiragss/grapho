@@ -279,13 +279,14 @@ class ColorPickerModule {
         const container = document.getElementById('canvas-container');
         const canvas = container?.querySelector('canvas');
 
-        if (canvas && state.buffer) {
+        const buf = layersModule.getActiveBuffer();
+        if (canvas && buf) {
             const rect = container.getBoundingClientRect();
             const sx = e.clientX - rect.left;
             const sy = e.clientY - rect.top;
             const { x, y } = canvasModule.screenToCanvas(sx, sy);
 
-            const color = this.sampleCanvasColor(Math.floor(x), Math.floor(y));
+            const color = this.sampleCanvasColor(buf, Math.floor(x), Math.floor(y));
             if (color) {
                 this.activeType = this.samplingType;
                 this.applyColor(color);
@@ -295,8 +296,7 @@ class ColorPickerModule {
         this.disableCanvasSamplingMode();
     }
 
-    sampleCanvasColor(x, y) {
-        const buf = state.buffer;
+    sampleCanvasColor(buf, x, y) {
         if (!buf) return null;
 
         buf.loadPixels();
@@ -326,7 +326,7 @@ class ColorPickerModule {
             state.tool.color = color;
         } else if (this.activeType === 'bg') {
             state.canvas.bgColor = color;
-            layersModule.refreshThumbnails();
+            layersModule.updateDock();
             window.redraw?.();
         }
 

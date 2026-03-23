@@ -3,6 +3,7 @@ import { state } from './state.js';
 class ExportModule {
     setup(p) {
         this.p = p;
+        document.getElementById('save-btn')?.addEventListener('click', () => this.savePNG());
     }
 
     savePNG() {
