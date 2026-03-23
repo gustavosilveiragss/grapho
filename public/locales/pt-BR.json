@@ -34,11 +34,13 @@
         "step4": "4. Reinicie o Firefox"
     },
     "colorDock": {
+        "title": "Cores",
         "textColor": "Texto",
         "bgColor": "Fundo",
         "history": "Recentes"
     },
     "symbolDock": {
+        "title": "Símbolos",
         "recent": "Recentes",
         "search": "Buscar...",
         "noResults": "Nenhum resultado"
@@ -48,6 +50,11 @@
         "layer": "Camada",
         "deleteTitle": "Excluir Camada",
         "confirmDelete": "Tem certeza que deseja excluir esta camada? Esta ação é irreversível."
+    },
+    "docks": {
+        "colors": "Cores",
+        "symbols": "Símbolos",
+        "collapse": "Recolher"
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",

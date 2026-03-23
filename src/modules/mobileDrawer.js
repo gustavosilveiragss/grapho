@@ -241,12 +241,13 @@ class MobileDrawerModule {
         });
 
         opacitySlider?.addEventListener('input', (e) => {
-            window.layersModule?.setActiveLayerOpacity(parseInt(e.target.value));
+            const opacity = parseInt(e.target.value) / 100;
+            window.layersModule?.setOpacity(state.layers.activeIndex, opacity);
         });
 
         layerItems.forEach((item, index) => {
             item.addEventListener('click', () => {
-                window.layersModule?.setActiveLayer(index);
+                window.layersModule?.setActive(index);
                 this.refreshDrawerContent('layer');
             });
         });

@@ -19,8 +19,32 @@ class ColorPickerModule {
         this.setupToolbarSwatches();
         this.setupDockControls();
         this.setupClickOutside();
+        this.setupToggleButtons();
         this.renderColorHistory();
         this.updateToolbarSwatches();
+    }
+
+    setupToggleButtons() {
+        const toggle = document.getElementById('color-dock-toggle');
+        toggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleDock();
+        });
+
+        const collapse = document.getElementById('color-dock-collapse');
+        collapse?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeDock();
+        });
+    }
+
+    toggleDock() {
+        const dock = document.getElementById('color-dock');
+        if (dock?.classList.contains('hidden')) {
+            this.openDock(this.activeType || 'text');
+        } else {
+            this.closeDock();
+        }
     }
 
     loadColorHistory() {
@@ -140,9 +164,11 @@ class ColorPickerModule {
     }
 
     setupClickOutside() {
-        document.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
             const dock = document.getElementById('color-dock');
             if (dock && !dock.classList.contains('hidden')) {
+                const toggle = document.getElementById('color-dock-toggle');
+                if (toggle && (e.target === toggle || toggle.contains(e.target))) return;
                 this.closeDock();
             }
         });
@@ -184,6 +210,9 @@ class ColorPickerModule {
                 lucide.createIcons({ nodes: dock.querySelectorAll('[data-lucide]') });
             }
         }
+
+        const toggle = document.getElementById('color-dock-toggle');
+        if (toggle) toggle.classList.add('active');
     }
 
     closeDock() {
@@ -203,6 +232,9 @@ class ColorPickerModule {
         textSwatch?.classList.remove('active');
         bgSwatch?.classList.remove('active');
         this.activeType = null;
+
+        const toggle = document.getElementById('color-dock-toggle');
+        if (toggle) toggle.classList.remove('active');
     }
 
     async activateEyedropper() {

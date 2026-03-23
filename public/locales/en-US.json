@@ -34,11 +34,13 @@
         "step4": "4. Restart Firefox"
     },
     "colorDock": {
+        "title": "Colors",
         "textColor": "Text",
         "bgColor": "Background",
         "history": "Recent"
     },
     "symbolDock": {
+        "title": "Symbols",
         "recent": "Recent",
         "search": "Search...",
         "noResults": "No results"
@@ -48,6 +50,11 @@
         "layer": "Layer",
         "deleteTitle": "Delete Layer",
         "confirmDelete": "Are you sure you want to delete this layer? This action cannot be undone."
+    },
+    "docks": {
+        "colors": "Colors",
+        "symbols": "Symbols",
+        "collapse": "Collapse"
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",

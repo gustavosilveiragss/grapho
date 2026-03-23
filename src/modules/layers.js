@@ -14,6 +14,22 @@ class LayersModule {
         }
         this.setupEventListeners();
         this.updateDock();
+        this.autoCollapseIfSmallScreen();
+        this.syncToggleState();
+    }
+
+    syncToggleState() {
+        const dock = document.getElementById('layer-dock');
+        const toggle = document.getElementById('layer-dock-toggle');
+        if (toggle) {
+            toggle.classList.toggle('active', !dock?.classList.contains('hidden'));
+        }
+    }
+
+    autoCollapseIfSmallScreen() {
+        if (window.innerWidth <= 1200 && window.innerWidth > 768) {
+            this.collapseDock();
+        }
     }
 
     createLayer() {
@@ -168,20 +184,24 @@ class LayersModule {
 
     collapseDock() {
         const dock = document.getElementById('layer-dock');
+        const toggle = document.getElementById('layer-dock-toggle');
         if (dock) {
             dock.classList.add('hidden');
         }
+        if (toggle) toggle.classList.remove('active');
         window.persistenceModule?.scheduleSave();
     }
 
     expandDock() {
         const dock = document.getElementById('layer-dock');
+        const toggle = document.getElementById('layer-dock-toggle');
         if (dock) {
             dock.classList.remove('hidden');
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons({ nodes: [dock] });
             }
         }
+        if (toggle) toggle.classList.add('active');
         window.persistenceModule?.scheduleSave();
     }
 
@@ -216,6 +236,9 @@ class LayersModule {
 
         const toggleBtn = document.getElementById('layer-dock-toggle');
         toggleBtn?.addEventListener('click', () => this.toggleDock());
+
+        const collapseBtn = document.getElementById('layer-dock-collapse');
+        collapseBtn?.addEventListener('click', () => this.collapseDock());
 
         const opacitySlider = document.getElementById('layer-opacity');
         const opacityValue = document.getElementById('layer-opacity-value');

@@ -15,7 +15,30 @@ class ControlsModule {
     setup() {
         this.setupTextInput();
         this.setupColorPickers();
+        this.setupToolbarCollapse();
         window.addEventListener('penDetected', () => this.showPressureUI());
+    }
+
+    setupToolbarCollapse() {
+        const collapseBtn = document.getElementById('toolbar-collapse');
+        const expandBtn = document.getElementById('toolbar-expand');
+
+        collapseBtn?.addEventListener('click', () => this.collapseToolbar());
+        expandBtn?.addEventListener('click', () => this.expandToolbar());
+    }
+
+    collapseToolbar() {
+        const toolbar = document.getElementById('toolbar');
+        const expandBtn = document.getElementById('toolbar-expand');
+        if (toolbar) toolbar.classList.add('collapsed');
+        if (expandBtn) expandBtn.style.display = 'flex';
+    }
+
+    expandToolbar() {
+        const toolbar = document.getElementById('toolbar');
+        const expandBtn = document.getElementById('toolbar-expand');
+        if (toolbar) toolbar.classList.remove('collapsed');
+        if (expandBtn) expandBtn.style.display = 'none';
     }
 
     setupTextInput() {

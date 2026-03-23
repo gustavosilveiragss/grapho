@@ -23,9 +23,33 @@ class SymbolPickerModule {
         this.setupTabSwitching();
         this.setupSearch();
         this.setupClickOutside();
+        this.setupToggleButtons();
         this.setupHistoryListener();
         this.renderCurrentView();
         this.renderHistory();
+    }
+
+    setupToggleButtons() {
+        const toggle = document.getElementById('symbol-dock-toggle');
+        toggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleDock();
+        });
+
+        const collapse = document.getElementById('symbol-dock-collapse');
+        collapse?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeDock();
+        });
+    }
+
+    toggleDock() {
+        const dock = document.getElementById('symbol-dock');
+        if (dock?.classList.contains('hidden')) {
+            this.openDock();
+        } else {
+            this.closeDock();
+        }
     }
 
     loadHistory() {
@@ -111,6 +135,9 @@ class SymbolPickerModule {
             const textarea = document.getElementById('paint-text');
             if (!dock || dock.classList.contains('hidden')) return;
 
+            const toggle = document.getElementById('symbol-dock-toggle');
+            if (toggle && (e.target === toggle || toggle.contains(e.target))) return;
+
             if (!dock.contains(e.target) && e.target !== textarea && !textarea.contains(e.target)) {
                 this.closeDock();
             }
@@ -134,6 +161,9 @@ class SymbolPickerModule {
             lucide.createIcons({ nodes: dock.querySelectorAll('[data-lucide]') });
         }
 
+        const toggle = document.getElementById('symbol-dock-toggle');
+        if (toggle) toggle.classList.add('active');
+
         this.setupLazyLoading();
     }
 
@@ -145,6 +175,9 @@ class SymbolPickerModule {
         if (this.intersectionObserver) {
             this.intersectionObserver.disconnect();
         }
+
+        const toggle = document.getElementById('symbol-dock-toggle');
+        if (toggle) toggle.classList.remove('active');
     }
 
     setupLazyLoading() {

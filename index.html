@@ -16,76 +16,97 @@
         </div>
         <div id="canvas-container"></div>
 
-        <div id="color-dock" class="hidden">
-            <div class="color-dock-section">
-                <label id="color-dock-label">Texto</label>
-                <div class="color-row">
-                    <div class="dock-color-swatch" id="dock-color-swatch"></div>
-                    <input type="color" id="native-color-picker" value="#000000">
-                    <button class="eyedropper-btn" id="active-eyedropper">
-                        <i data-lucide="pipette"></i>
-                    </button>
+        <div class="dock-wrapper dock-wrapper-left" id="left-dock-wrapper">
+            <div id="color-dock" class="hidden">
+                <button class="dock-collapse-btn" id="color-dock-collapse" data-i18n-title="docks.collapse">
+                    <i data-lucide="panel-left-close"></i>
+                </button>
+                <div class="color-dock-section">
+                    <label id="color-dock-label">Texto</label>
+                    <div class="color-row">
+                        <div class="dock-color-swatch" id="dock-color-swatch"></div>
+                        <input type="color" id="native-color-picker" value="#000000">
+                        <button class="eyedropper-btn" id="active-eyedropper">
+                            <i data-lucide="pipette"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="active-color-input" value="#000000">
                 </div>
-                <input type="text" id="active-color-input" value="#000000">
+                <div class="color-dock-section">
+                    <label data-i18n="colorDock.history">Recentes</label>
+                    <div id="color-history" class="color-history-grid"></div>
+                </div>
             </div>
-            <div class="color-dock-section">
-                <label data-i18n="colorDock.history">Recentes</label>
-                <div id="color-history" class="color-history-grid"></div>
+
+            <div id="symbol-dock" class="hidden">
+                <button class="dock-collapse-btn" id="symbol-dock-collapse" data-i18n-title="docks.collapse">
+                    <i data-lucide="panel-left-close"></i>
+                </button>
+                <div class="symbol-dock-header">
+                    <div class="symbol-dock-tabs" id="symbol-tabs">
+                        <button class="symbol-dock-tab active" data-tab="symbols">
+                            <i data-lucide="shapes"></i>
+                        </button>
+                        <button class="symbol-dock-tab" data-tab="emojis">
+                            <i data-lucide="smile"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="symbol-search-wrapper">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="symbol-search" data-i18n-placeholder="symbolDock.search" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="symbol-content" id="symbol-content"></div>
+                <div class="symbol-history-section">
+                    <label data-i18n="symbolDock.recent">Recentes</label>
+                    <div id="symbol-history" class="symbol-history-grid"></div>
+                </div>
+            </div>
+
+            <div class="dock-toggle-group">
+                <button class="dock-toggle" id="color-dock-toggle" data-i18n-title="docks.colors">
+                    <i data-lucide="palette"></i>
+                </button>
+                <button class="dock-toggle" id="symbol-dock-toggle" data-i18n-title="docks.symbols">
+                    <i data-lucide="shapes"></i>
+                </button>
             </div>
         </div>
 
-        <div id="symbol-dock" class="hidden">
-            <div class="symbol-dock-header">
-                <div class="symbol-dock-tabs" id="symbol-tabs">
-                    <button class="symbol-dock-tab active" data-tab="symbols">
-                        <i data-lucide="shapes"></i>
-                    </button>
-                    <button class="symbol-dock-tab" data-tab="emojis">
-                        <i data-lucide="smile"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="symbol-search-wrapper">
-                <i data-lucide="search"></i>
-                <input type="text" id="symbol-search" data-i18n-placeholder="symbolDock.search" autocomplete="off" spellcheck="false">
-            </div>
-            <div class="symbol-content" id="symbol-content"></div>
-            <div class="symbol-history-section">
-                <label data-i18n="symbolDock.recent">Recentes</label>
-                <div id="symbol-history" class="symbol-history-grid"></div>
-            </div>
-        </div>
-
-        <button class="layer-dock-toggle" id="layer-dock-toggle">
-            <i data-lucide="layers"></i>
-        </button>
-
-        <div id="layer-dock">
-            <div class="layer-dock-header">
-                <span data-i18n="layers.title">Camadas</span>
-                <div class="layer-dock-actions">
-                    <div class="layer-action-grid">
-                        <button class="layer-action-btn" id="layer-add-btn" title="Adicionar">
-                            <i data-lucide="plus"></i>
-                        </button>
-                        <button class="layer-action-btn danger" id="layer-remove-btn" disabled>
-                            <i data-lucide="trash-2"></i>
-                        </button>
-                        <button class="layer-action-btn" id="layer-up-btn" disabled>
-                            <i data-lucide="chevron-up"></i>
-                        </button>
-                        <button class="layer-action-btn" id="layer-down-btn" disabled>
-                            <i data-lucide="chevron-down"></i>
-                        </button>
-                    </div>
-                    <div class="layer-opacity-control">
-                        <i data-lucide="sun"></i>
-                        <input type="range" id="layer-opacity" min="0" max="100" value="100">
-                        <span id="layer-opacity-value">100%</span>
+        <div class="dock-wrapper dock-wrapper-right" id="layer-dock-wrapper">
+            <div id="layer-dock">
+                <button class="dock-collapse-btn" id="layer-dock-collapse" data-i18n-title="docks.collapse">
+                    <i data-lucide="panel-right-close"></i>
+                </button>
+                <div class="layer-dock-header">
+                    <span data-i18n="layers.title">Camadas</span>
+                    <div class="layer-dock-actions">
+                        <div class="layer-action-grid">
+                            <button class="layer-action-btn" id="layer-add-btn" title="Adicionar">
+                                <i data-lucide="plus"></i>
+                            </button>
+                            <button class="layer-action-btn danger" id="layer-remove-btn" disabled>
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                            <button class="layer-action-btn" id="layer-up-btn" disabled>
+                                <i data-lucide="chevron-up"></i>
+                            </button>
+                            <button class="layer-action-btn" id="layer-down-btn" disabled>
+                                <i data-lucide="chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="layer-opacity-control">
+                            <i data-lucide="sun"></i>
+                            <input type="range" id="layer-opacity" min="0" max="100" value="100">
+                            <span id="layer-opacity-value">100%</span>
+                        </div>
                     </div>
                 </div>
+                <div class="layer-list" id="layer-list"></div>
             </div>
-            <div class="layer-list" id="layer-list"></div>
+            <button class="dock-toggle active" id="layer-dock-toggle">
+                <i data-lucide="layers"></i>
+            </button>
         </div>
 
         <div id="lang-switcher">
@@ -110,6 +131,9 @@
         </div>
 
         <div id="toolbar">
+            <button class="toolbar-collapse-btn" id="toolbar-collapse">
+                <i data-lucide="chevron-down"></i>
+            </button>
             <div class="toolbar-content">
                 <div class="tool-group text-group">
                     <textarea id="paint-text" rows="3"
@@ -236,6 +260,10 @@
             </div>
         </div>
 
+        <button class="toolbar-expand-btn" id="toolbar-expand" style="display: none;">
+            <i data-lucide="chevron-up"></i>
+        </button>
+
         <div class="dock-fab-container" id="dock-fabs">
             <button class="dock-fab" id="fab-color" aria-label="Cores">
                 <div class="fab-swatch" id="fab-color-swatch"></div>
@@ -267,10 +295,10 @@
                 <div id="dialog-custom-content" class="dialog-instructions" style="display: none;"></div>
                 <div class="dialog-buttons">
                     <button class="dock-button" id="dialog-cancel" onclick="window.dialogModule?.handleCancel()">
-                        <span>Cancel</span>
+                        <span data-i18n="dialog.cancel">Cancelar</span>
                     </button>
                     <button class="dock-button primary" id="dialog-confirm" onclick="window.dialogModule?.handleConfirm()">
-                        <span>OK</span>
+                        <span data-i18n="dialog.ok">OK</span>
                     </button>
                 </div>
             </div>

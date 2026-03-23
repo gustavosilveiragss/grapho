@@ -52,6 +52,11 @@ class I18n {
             el.placeholder = this.t(key);
         });
 
+        document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+            const key = el.getAttribute('data-i18n-title');
+            el.title = this.t(key);
+        });
+
         const title = document.querySelector('title[data-i18n]');
         if (title) {
             title.textContent = this.t(title.getAttribute('data-i18n'));

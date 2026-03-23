@@ -154,8 +154,14 @@ class PersistenceModule {
             Object.assign(state.pressure, data.pressure);
         }
 
-        if (data.ui?.layerDockCollapsed) {
-            layersModule.collapseDock();
+        if (data.ui?.layerDockCollapsed !== undefined) {
+            if (data.ui.layerDockCollapsed) {
+                layersModule.collapseDock();
+            } else {
+                layersModule.expandDock();
+            }
+        } else {
+            layersModule.autoCollapseIfSmallScreen();
         }
 
         this.syncUI();
@@ -207,8 +213,14 @@ class PersistenceModule {
             state.layers.nextId = data.layers.nextId;
         }
 
-        if (data.ui?.layerDockCollapsed) {
-            layersModule.collapseDock();
+        if (data.ui?.layerDockCollapsed !== undefined) {
+            if (data.ui.layerDockCollapsed) {
+                layersModule.collapseDock();
+            } else {
+                layersModule.expandDock();
+            }
+        } else {
+            layersModule.autoCollapseIfSmallScreen();
         }
 
         return true;
