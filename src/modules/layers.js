@@ -21,8 +21,10 @@ class LayersModule {
     syncToggleState() {
         const dock = document.getElementById('layer-dock');
         const toggle = document.getElementById('layer-dock-toggle');
+        const isExpanded = !dock?.classList.contains('hidden');
         if (toggle) {
-            toggle.classList.toggle('active', !dock?.classList.contains('hidden'));
+            toggle.classList.toggle('active', isExpanded);
+            toggle.style.display = isExpanded ? 'none' : '';
         }
     }
 
@@ -188,7 +190,10 @@ class LayersModule {
         if (dock) {
             dock.classList.add('hidden');
         }
-        if (toggle) toggle.classList.remove('active');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.style.display = '';
+        }
         window.persistenceModule?.scheduleSave();
     }
 
@@ -201,7 +206,10 @@ class LayersModule {
                 lucide.createIcons({ nodes: [dock] });
             }
         }
-        if (toggle) toggle.classList.add('active');
+        if (toggle) {
+            toggle.classList.add('active');
+            toggle.style.display = 'none';
+        }
         window.persistenceModule?.scheduleSave();
     }
 

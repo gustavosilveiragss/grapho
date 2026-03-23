@@ -162,7 +162,10 @@ class SymbolPickerModule {
         }
 
         const toggle = document.getElementById('symbol-dock-toggle');
-        if (toggle) toggle.classList.add('active');
+        if (toggle) {
+            toggle.classList.add('active');
+            toggle.style.display = 'none';
+        }
 
         this.setupLazyLoading();
     }
@@ -177,7 +180,10 @@ class SymbolPickerModule {
         }
 
         const toggle = document.getElementById('symbol-dock-toggle');
-        if (toggle) toggle.classList.remove('active');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.style.display = '';
+        }
     }
 
     setupLazyLoading() {

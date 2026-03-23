@@ -212,7 +212,10 @@ class ColorPickerModule {
         }
 
         const toggle = document.getElementById('color-dock-toggle');
-        if (toggle) toggle.classList.add('active');
+        if (toggle) {
+            toggle.classList.add('active');
+            toggle.style.display = 'none';
+        }
     }
 
     closeDock() {
@@ -234,7 +237,10 @@ class ColorPickerModule {
         this.activeType = null;
 
         const toggle = document.getElementById('color-dock-toggle');
-        if (toggle) toggle.classList.remove('active');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.style.display = '';
+        }
     }
 
     async activateEyedropper() {
