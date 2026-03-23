@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://grapho.marmota.dev.br/sitemap.xml

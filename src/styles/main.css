@@ -79,6 +79,27 @@ body {
     opacity: 1;
 }
 
+.github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+    padding: 2px 4px;
+    border-left: 1px solid #3a3a3a;
+    margin-left: 2px;
+}
+
+.github-link:hover {
+    opacity: 0.7;
+}
+
+.github-link svg {
+    width: 16px;
+    height: 16px;
+}
+
 #nav-hint {
     position: fixed;
     top: 48px;
@@ -237,7 +258,7 @@ body {
 
 #paint-text {
     width: 200px;
-    height: 66px;
+    height: 84px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid #444444;
     border-radius: 10px;
