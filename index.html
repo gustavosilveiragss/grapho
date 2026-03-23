@@ -3,44 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title data-i18n="app.title">Grapho — Pinte texto ao longo de caminhos no canvas</title>
-    <meta name="description" content="Grapho é uma ferramenta online e gratuita para pintar texto ao longo de caminhos livres no canvas. Suporte a camadas, desfazer/refazer, emojis, rotação e exportação PNG.">
-    <meta name="keywords" content="grapho, text painting, canvas art, ASCII art, text art, ferramenta de texto, arte com texto, canvas online, pintura de texto, desenho com letras, arte ASCII, ferramenta gratuita">
-    <meta name="author" content="Gustavo Silveira">
+    <title data-i18n="app.title">Grapho | Desenhe com letras, emojis e símbolos</title>
+    <meta name="description" content="Digite qualquer texto ou emoji e pinte arrastando o mouse como um pincel. De graça, direto no navegador, sem cadastro e sem instalar nada. Salva em PNG na hora.">
+    <meta name="keywords" content="grapho, desenhar com texto, draw with text, text art maker, text art generator, ASCII art generator, ASCII art maker, ASCII art online, text painting tool, paint with text, write with emojis, type along path, text on path, text on curve, text curve generator, curved text online, letras em curva, texto em curva, escrever com emojis, pintar com letras, arte com texto, arte com texto online, arte ASCII, arte ASCII online, gerador de arte com texto, ferramenta de texto gratis, desenho com letras, desenho com texto, tipografia criativa, creative typography tool, text drawing tool, font drawing tool, canvas text art, canvas drawing tool, emoji art maker, emoji drawing, emoji art online, desenhar com emojis, free text art tool, free ASCII art tool, text brush, pincel de texto, escrever no canvas, lettering online, lettering tool, text design tool, unicode art, unicode art maker, symbol art, symbol drawing, desenhar com simbolos, arte com simbolos, text path tool, calligraphy tool online, digital text art, digital lettering, ferramenta de lettering, generador de arte texto, dibujar con texto, arte con texto">
+    <meta name="author" content="outramarmota">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <meta name="theme-color" content="#1e1e1e">
+    <link rel="icon" type="image/png" href="/docs/bmo.png">
+    <link rel="apple-touch-icon" href="/docs/bmo.png">
     <link rel="canonical" href="https://grapho.marmota.dev.br/">
     <link rel="alternate" hreflang="pt-BR" href="https://grapho.marmota.dev.br/">
     <link rel="alternate" hreflang="en-US" href="https://grapho.marmota.dev.br/">
     <link rel="alternate" hreflang="x-default" href="https://grapho.marmota.dev.br/">
-    <meta property="og:title" content="Grapho — Pinte texto ao longo de caminhos no canvas">
-    <meta property="og:description" content="Ferramenta online e gratuita para pintar texto ao longo de caminhos livres. Camadas, emojis, rotação e exportação PNG.">
+    <meta property="og:title" content="Grapho | Desenhe com letras, emojis e símbolos">
+    <meta property="og:description" content="Digite qualquer texto ou emoji e pinte arrastando o mouse como um pincel. De graça, direto no navegador, sem cadastro e sem instalar nada.">
     <meta property="og:url" content="https://grapho.marmota.dev.br/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
     <meta property="og:locale:alternate" content="en_US">
     <meta property="og:site_name" content="Grapho">
+    <meta property="og:image" content="https://grapho.marmota.dev.br/docs/bmo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Grapho — Pinte texto ao longo de caminhos no canvas">
-    <meta name="twitter:description" content="Ferramenta online e gratuita para pintar texto ao longo de caminhos livres. Camadas, emojis, rotação e exportação PNG.">
+    <meta name="twitter:title" content="Grapho | Desenhe com letras, emojis e símbolos">
+    <meta name="twitter:description" content="Digite qualquer texto ou emoji e pinte arrastando o mouse como um pincel. De graça, direto no navegador, sem cadastro e sem instalar nada.">
+    <meta name="twitter:image" content="https://grapho.marmota.dev.br/docs/bmo.png">
+    <meta name="twitter:image:alt" content="Grapho | arte feita com texto no canvas">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Grapho",
         "url": "https://grapho.marmota.dev.br/",
-        "description": "Ferramenta online e gratuita para pintar texto ao longo de caminhos livres no canvas.",
+        "description": "Digite qualquer texto ou emoji e pinte arrastando o mouse como um pincel. De graça, direto no navegador.",
         "applicationCategory": "DesignApplication",
         "operatingSystem": "Web",
+        "softwareVersion": "1.0.0",
+        "datePublished": "2026-03-17",
+        "screenshot": "https://grapho.marmota.dev.br/docs/bmo.png",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
         "inLanguage": ["pt-BR", "en-US"],
         "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
-        "author": { "@type": "Person", "name": "Gustavo Silveira" }
+        "author": { "@type": "Person", "name": "outramarmota" }
     }
     </script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="preconnect" href="https://unpkg.com">
+    <script src="https://unpkg.com/lucide@1.0.1/dist/umd/lucide.js"></script>
 </head>
 <body>
+    <noscript>
+        <div style="padding:2rem;text-align:center;font-family:sans-serif;">
+            <h1>Grapho</h1>
+            <p>Desenhe com letras, emojis e símbolos livremente no canvas. De graça, direto no navegador.</p>
+            <p>Este app precisa de JavaScript para funcionar.</p>
+        </div>
+    </noscript>
     <div class="app-container">
         <div id="loading-overlay" class="loading-overlay" style="display: none;">
             <div class="loading-content">
