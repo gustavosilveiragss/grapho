@@ -6,6 +6,7 @@ export const state = {
         zoom: 1,
         panX: 0,
         panY: 0,
+        rotation: 0,
         spaceHeld: false,
         pinching: false,
     },

@@ -63,6 +63,7 @@ class PersistenceModule {
                 density: density,
                 bgColor: state.canvas.bgColor,
                 zoom: state.canvas.zoom,
+                rotation: state.canvas.rotation,
                 panX: canvasModule.tx,
                 panY: canvasModule.ty,
             },
@@ -140,6 +141,7 @@ class PersistenceModule {
         if (data.canvas) {
             state.canvas.bgColor = data.canvas.bgColor || state.canvas.bgColor;
             state.canvas.zoom = data.canvas.zoom ?? state.canvas.zoom;
+            state.canvas.rotation = data.canvas.rotation ?? 0;
             canvasModule.tx = data.canvas.panX ?? canvasModule.tx;
             canvasModule.ty = data.canvas.panY ?? canvasModule.ty;
         }
@@ -166,6 +168,7 @@ class PersistenceModule {
 
         state.canvas.bgColor = data.canvas.bgColor;
         state.canvas.zoom = data.canvas.zoom;
+        state.canvas.rotation = data.canvas.rotation ?? 0;
         canvasModule.tx = data.canvas.panX;
         canvasModule.ty = data.canvas.panY;
 

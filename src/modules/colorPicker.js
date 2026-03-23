@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { i18n } from './i18n.js';
 import { layersModule } from './layers.js';
 import { persistenceModule } from './persistence.js';
+import { canvasModule } from './canvas.js';
 
 const STORAGE_KEY = 'grapho-color-history';
 
@@ -241,14 +242,12 @@ class ColorPickerModule {
         const canvas = container?.querySelector('canvas');
 
         if (canvas && state.buffer) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
+            const rect = container.getBoundingClientRect();
+            const sx = e.clientX - rect.left;
+            const sy = e.clientY - rect.top;
+            const { x, y } = canvasModule.screenToCanvas(sx, sy);
 
-            const x = Math.floor((e.clientX - rect.left) * scaleX);
-            const y = Math.floor((e.clientY - rect.top) * scaleY);
-
-            const color = this.sampleCanvasColor(x, y);
+            const color = this.sampleCanvasColor(Math.floor(x), Math.floor(y));
             if (color) {
                 this.activeType = this.samplingType;
                 this.applyColor(color);

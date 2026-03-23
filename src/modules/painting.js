@@ -4,6 +4,7 @@ import { drawingModule } from './drawing.js';
 import { historyModule } from './history.js';
 import { layersModule } from './layers.js';
 import { persistenceModule } from './persistence.js';
+import { canvasModule } from './canvas.js';
 
 const PATH_HISTORY = 12;
 const ANGLE_BLEND = 0.5;
@@ -122,13 +123,11 @@ class PaintingModule {
     }
 
     getPos(e) {
-        const rect = e.target.getBoundingClientRect();
-        const scaleX = state.canvas.width / rect.width;
-        const scaleY = state.canvas.height / rect.height;
-        return {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top) * scaleY,
-        };
+        const container = document.getElementById('canvas-container');
+        const rect = container.getBoundingClientRect();
+        const sx = e.clientX - rect.left;
+        const sy = e.clientY - rect.top;
+        return canvasModule.screenToCanvas(sx, sy);
     }
 
     continueStroke(x, y) {

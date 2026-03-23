@@ -112,6 +112,30 @@ body {
     flex-direction: column;
 }
 
+.hint-rotate-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#rotation-indicator {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    color: #aaaaaa;
+    font-size: 10px;
+    font-family: inherit;
+    padding: 1px 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+#rotation-indicator:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
 #toolbar {
     position: fixed;
     bottom: 16px;

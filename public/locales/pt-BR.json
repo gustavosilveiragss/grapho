@@ -51,7 +51,8 @@
     },
     "hints": {
         "zoom": "Ctrl + Scroll: Zoom",
-        "pan": "Espaço + Arrastar: Mover"
+        "pan": "Espaço + Arrastar: Mover",
+        "rotate": "Alt + Scroll: Rotacionar"
     },
     "loading": {
         "restoring": "Restaurando..."
