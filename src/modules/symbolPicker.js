@@ -23,6 +23,8 @@ class SymbolPickerModule {
         this.setupClickOutside();
         this.setupToggleButtons();
         this.setupHistoryListener();
+        const content = document.getElementById('symbol-content');
+        if (content) this.attachItemListeners(content);
         this.renderCurrentView();
         this.renderHistory();
     }
@@ -238,7 +240,6 @@ class SymbolPickerModule {
         });
 
         container.innerHTML = html;
-        this.attachItemListeners(container);
     }
 
     renderEmojiGroups(container) {
@@ -260,7 +261,6 @@ class SymbolPickerModule {
         });
 
         container.innerHTML = html;
-        this.attachItemListeners(container);
     }
 
     attachItemListeners(container) {
@@ -320,7 +320,6 @@ class SymbolPickerModule {
                 </div>
             </div>
         `;
-        this.attachItemListeners(container);
     }
 
     selectItem(char) {

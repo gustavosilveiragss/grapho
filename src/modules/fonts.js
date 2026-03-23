@@ -70,10 +70,13 @@ class FontsModule {
         const dropdown = document.getElementById('font-dropdown');
         if (!searchInput || !dropdown) return;
 
+        document.body.appendChild(dropdown);
+
         searchInput.value = state.tool.fontFamily;
 
         searchInput.addEventListener('focus', () => {
             this.renderDropdown(this.fonts);
+            this.positionDropdown(searchInput, dropdown);
             dropdown.classList.add('open');
         });
 
@@ -83,14 +86,21 @@ class FontsModule {
                 f.family.toLowerCase().includes(query),
             );
             this.renderDropdown(filtered.slice(0, 100));
+            this.positionDropdown(searchInput, dropdown);
             dropdown.classList.add('open');
         });
 
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.font-selector')) {
+            if (!e.target.closest('.font-selector') && !e.target.closest('#font-dropdown')) {
                 dropdown.classList.remove('open');
             }
         });
+    }
+
+    positionDropdown(input, dropdown) {
+        const rect = input.getBoundingClientRect();
+        dropdown.style.left = `${rect.left}px`;
+        dropdown.style.bottom = `${window.innerHeight - rect.top + 6}px`;
     }
 
     renderDropdown(fonts) {

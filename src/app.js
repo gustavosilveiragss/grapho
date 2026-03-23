@@ -49,12 +49,17 @@ async function initializeApp() {
     const sketch = (p) => {
         p.setup = async () => {
             canvasModule.setup(p);
-            persistenceModule.setup(p);
+            await persistenceModule.setup(p);
 
-            const savedData = persistenceModule.load();
-            layersModule.setup(p);
+            const savedData = await persistenceModule.load();
+            const hasLayerData = savedData?.layers?.items?.length > 0;
+            layersModule.setup(p, hasLayerData);
             if (savedData) {
-                persistenceModule.restoreSettingsOnly(savedData);
+                if (hasLayerData) {
+                    await persistenceModule.restoreState(savedData);
+                } else {
+                    persistenceModule.restoreSettingsOnly(savedData);
+                }
             }
 
             controlsModule.setup();

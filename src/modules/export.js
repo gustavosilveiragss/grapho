@@ -9,16 +9,25 @@ class ExportModule {
     savePNG() {
         if (!state.layers.items.length) return;
 
-        this.p.background(state.canvas.bgColor);
+        const ind = document.getElementById('saving-indicator');
+        if (ind) ind.style.display = '';
 
-        for (const layer of state.layers.items) {
-            if (layer.visible && layer.buffer) {
-                this.p.image(layer.buffer, 0, 0);
+        requestAnimationFrame(() => {
+            this.p.background(state.canvas.bgColor);
+
+            for (const layer of state.layers.items) {
+                if (layer.visible && layer.buffer) {
+                    this.p.image(layer.buffer, 0, 0);
+                }
             }
-        }
 
-        this.p.saveCanvas('grapho', 'png');
-        this.p.redraw();
+            this.p.saveCanvas('grapho', 'png');
+            this.p.redraw();
+
+            setTimeout(() => {
+                if (ind) ind.style.display = 'none';
+            }, 500);
+        });
     }
 }
 

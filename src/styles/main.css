@@ -350,9 +350,7 @@ body {
 
 .font-dropdown {
     display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 0;
+    position: fixed;
     width: 240px;
     max-height: 300px;
     overflow-y: auto;
@@ -360,8 +358,7 @@ body {
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: 10px;
-    margin-bottom: 6px;
-    z-index: 100;
+    z-index: 1000;
     scrollbar-width: thin;
     scrollbar-color: #444444 transparent;
 }
@@ -1489,6 +1486,20 @@ input[type="color"]::-webkit-color-swatch {
 
 .dock-button.primary:hover {
     background: rgba(79, 195, 247, 0.3);
+}
+
+.saving-indicator {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    z-index: 999;
+    pointer-events: none;
 }
 
 .loading-overlay {

@@ -62,6 +62,7 @@
         "rotate": "Alt + Scroll: Rotate"
     },
     "loading": {
-        "restoring": "Restoring..."
+        "restoring": "Restoring...",
+        "saving": "Saving..."
     }
 }
