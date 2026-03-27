@@ -6,10 +6,10 @@ const ROTATION_STEP = 0.05;
 const ZOOM_IN_FACTOR = 1.1;
 const ZOOM_OUT_FACTOR = 0.9;
 const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 5;
+const MAX_ZOOM = 20;
 
 export function getPixelDensity() {
-    return Math.min(5, Math.max(3, window.devicePixelRatio));
+    return Math.min(3, window.devicePixelRatio || 2);
 }
 
 class CanvasModule {
